@@ -15,7 +15,7 @@ has_treatment(data)
 \arguments{
 \item{data}{a data frame or \code{causal_tbl}}
 
-\item{outcome}{the column containing the treatment variable (tidy-selected).
+\item{treatment}{the column containing the treatment variable (tidy-selected).
 Must be numeric or coercible to numeric.}
 }
 \value{

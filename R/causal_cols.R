@@ -51,7 +51,7 @@ has_outcome <- function(data) {
 #' Define a treatment variable for a `causal_tbl`
 #'
 #' @param data a data frame or `causal_tbl`
-#' @param outcome the column containing the treatment variable (tidy-selected).
+#' @param treatment the column containing the treatment variable (tidy-selected).
 #'    Must be numeric or coercible to numeric.
 #'
 #' @return A `causal_tbl`
