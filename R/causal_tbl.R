@@ -8,12 +8,14 @@ new_causal_tbl <- function(..., .outcome=NULL, .treatment=NULL) {
     )
 
     # set attributes for .outcome, .treatment
+    # TODO these are in `attr<-`(out, "causal_cols", ...)
 
     out
 }
 
 validate_causal_tbl <- function(data, call = parent.frame()) {
     # checks of attributes
+    # TODO
 
     data
 }
@@ -31,6 +33,8 @@ reconstruct.causal_tbl <- function(data, old) {
 
     if (!missing(old)) {
         # fix attributes
+        # TODO adjust approach from
+        # https://github.com/alarm-redist/redist/blob/a8909a926026af7f8237c14b5238529556bb14c2/R/redist_map.R#L97
     }
 
     class(data) <- c("causal_tbl", classes)
