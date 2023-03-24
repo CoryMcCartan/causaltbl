@@ -102,7 +102,7 @@ has_treatment <- function(data) {
 #'   id = c("a", "a", "a", "a", "b", "b", "b", "b"),
 #'   year = rep(2015:2018, 2),
 #'   trt = c(0, 0, 0, 0, 0, 0, 1, 1),
-#'   y = c(1, 3, 2, 3, 1, 3, 4, 5)
+#'   y = c(1, 3, 2, 3, 2, 4, 4, 5)
 #' ) |>
 #'   set_panel(unit=id, time=year)
 #' print(data) # a causal_tbl

@@ -49,13 +49,18 @@ test_that("getting and setting panel data", {
         id = c("a", "a", "a", "a", "b", "b", "b", "b"),
         year = rep(2015:2018, 2),
         trt = c(0, 0, 0, 0, 0, 0, 1, 1),
-        y = c(1, 3, 2, 3, 1, 3, 4, 5)
+        y = c(1, 3, 2, 3, 2, 4, 4, 5)
     )
 
     x_panel = set_panel(x, unit=id, time=year)
     expect_equal(get_panel(x_panel), list(unit = "id", time = "year"))
     expect_true(has_panel(x_panel))
     expect_no_error(validate_causal_tbl(x_panel))
+
+    x_panel2 = set_treatment(set_outcome(x_panel, y), trt)
+    expect_true(has_panel(x_panel2))
+    expect_true(has_treatment(x_panel2))
+    expect_true(has_outcome(x_panel2))
 
     expect_error(set_panel(x, unit=id), "for `time`")
     expect_error(set_panel(x, time=year), "for `unit`")

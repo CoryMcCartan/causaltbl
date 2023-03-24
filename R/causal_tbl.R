@@ -104,10 +104,10 @@ reconstruct.causal_tbl <- function(data, old) {
 causal_tbl <- function(..., .outcome=NULL, .treatment=NULL) {
     data = vctrs::df_list(...)
     if (!missing(.outcome)) {
-        outcome <- single_col_name(enquo(.outcome), data, "outcome")
+        .outcome <- single_col_name(enquo(.outcome), data, "outcome")
     }
     if (!missing(.treatment)) {
-        treatment <- single_col_name(enquo(.treatment), data, "treatment")
+        .treatment <- single_col_name(enquo(.treatment), data, "treatment")
     }
 
     new_causal_tbl(data, .outcome=.outcome, .treatment=.treatment)
@@ -179,7 +179,51 @@ assert_df <- function(data, arg) {
 #' @method tbl_sum causal_tbl
 #' @export
 tbl_sum.causal_tbl <- function(x, ...) {
-    lines <- c("A causal_tbl" = pillar::dim_desc(x),
+    lines <- c("A causal_tbl " = pillar::dim_desc(x),
                NextMethod())
     lines[-2] # remove tbl line
+}
+
+#' @importFrom pillar tbl_format_header
+#' @method tbl_format_header causal_tbl
+#' @export
+tbl_format_header.causal_tbl <- function(x, setup, ...) {
+    default_header <- NextMethod()
+    new_header <- paste0(
+        pillar::style_subtle(cli::format_inline("# A {.cls causal_tbl}")),
+        pillar::style_subtle(paste0(" [", pillar::dim_desc(x), "]"))
+    )
+    c(new_header, default_header[-1])
+}
+
+#' @importFrom pillar tbl_format_setup
+#' @method tbl_format_setup causal_tbl
+#' @export
+tbl_format_setup.causal_tbl <- function(x, width, ..., n, max_extra_cols, max_footer_lines, focus) {
+    NextMethod(focus=unlist(causal_cols(x)))
+}
+
+
+#' @importFrom pillar ctl_new_pillar
+#' @method ctl_new_pillar causal_tbl
+#' @export
+ctl_new_pillar.causal_tbl <- function(controller, x, width, ..., title = NULL) {
+    out <- NextMethod()
+    cols <- causal_cols(controller)
+    marker_type = names(cols)[match(title, cols)]
+    marker = if (length(marker_type) == 0 || is.na(marker_type)) {
+        ""
+    } else {
+        pillar::style_subtle(c(
+            outcome="[out]", treatment="[trt]",
+            panel_unit="[unit]", panel_time="[time]"
+        )[marker_type])
+    }
+
+    pillar::new_pillar(list(
+        marker = pillar::new_pillar_component(list(marker), width = nchar(marker)),
+        title = out$title,
+        type = out$type,
+        data = out$data
+    ))
 }

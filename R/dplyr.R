@@ -1,11 +1,11 @@
 group_by.causal_tbl <- function(.data, ..., .add=FALSE) {
-    reconstruct.causal_tbl(NextMethod(), data)
+    reconstruct.causal_tbl(NextMethod(), .data)
 }
 ungroup.causal_tbl <- function(.data, ...) {
-    reconstruct.causal_tbl(NextMethod(), data)
+    reconstruct.causal_tbl(NextMethod(), .data)
 }
 rowwise.causal_tbl <- function(.data, ...) {
-    reconstruct.causal_tbl(NextMethod(), data)
+    reconstruct.causal_tbl(NextMethod(), .data)
 }
 
 dplyr_reconstruct.causal_tbl <- function(data, template) {
