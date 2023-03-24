@@ -4,39 +4,37 @@ test_that("causal_tbl creation", {
 
     expect_s3_class(x, c("causal_tbl", "tbl_df", "tbl", "data.frame"), exact=TRUE)
     # addl attribute checks
-    expect_true(is.null(attr(x, 'causal_cols')$outcome))
-    expect_true(is.null(attr(x, 'causal_cols')$treatment))
-    expect_true(length(names(attr(x, 'causal_cols'))) == 2L)
+    expect_type(attr(x, "causal_cols"), "list")
+    expect_type(causal_cols(x), "list")
+    expect_null(get_outcome(x))
+    expect_null(get_treatment(x))
 })
 
 test_that("causal_tbl attributes", {
     x <- causal_tbl(milk_first = c(0, 1, 0, 1, 1, 0, 0, 1),
                    guess = c(0, 1, 0, 1, 1, 0, 0, 1),
-                   correct = c(0, 1, 0, 1, 1, 0, 0, 1) == c(0, 1, 0, 1, 1, 0, 0, 1),
-                   .outcome = 'correct')
+                   .outcome = "guess")
 
-    expect_s3_class(x, c("causal_tbl", "tbl_df", "tbl", "data.frame"), exact=TRUE)
+    expect_s3_class(x, "causal_tbl")
 
-    expect_true(attr(x, 'causal_cols')$outcome == 'correct')
-    expect_true(is.null(attr(x, 'causal_cols')$treatment))
-
-    x <- causal_tbl(milk_first = c(0, 1, 0, 1, 1, 0, 0, 1),
-                    guess = c(0, 1, 0, 1, 1, 0, 0, 1),
-                    correct = c(0, 1, 0, 1, 1, 0, 0, 1) == c(0, 1, 0, 1, 1, 0, 0, 1),
-                    .treatment = 'milk_first')
-
-    expect_s3_class(x, c("causal_tbl", "tbl_df", "tbl", "data.frame"), exact=TRUE)
-
-    expect_true(is.null(attr(x, 'causal_cols')$outcome))
-    expect_true(attr(x, 'causal_cols')$treatment == 'milk_first')
+    expect_equal(get_outcome(x), "guess")
+    expect_null(get_treatment(x))
 
     x <- causal_tbl(milk_first = c(0, 1, 0, 1, 1, 0, 0, 1),
                     guess = c(0, 1, 0, 1, 1, 0, 0, 1),
-                    correct = c(0, 1, 0, 1, 1, 0, 0, 1) == c(0, 1, 0, 1, 1, 0, 0, 1),
-                    .outcome = 'correct', .treatment = 'milk_first')
+                    .treatment = "milk_first")
 
-    expect_s3_class(x, c("causal_tbl", "tbl_df", "tbl", "data.frame"), exact=TRUE)
+    expect_s3_class(x, "causal_tbl")
+    expect_equal(get_treatment(x), "milk_first")
+    expect_null(get_outcome(x))
 
-    expect_true(attr(x, 'causal_cols')$outcome == 'correct')
-    expect_true(attr(x, 'causal_cols')$treatment == 'milk_first')
+    x <- causal_tbl(milk_first = c(0, 1, 0, 1, 1, 0, 0, 1),
+                    guess = c(0, 1, 0, 1, 1, 0, 0, 1),
+                    .outcome = "guess",
+                    .treatment = "milk_first")
+
+    expect_s3_class(x, "causal_tbl")
+
+    expect_equal(get_outcome(x), "guess")
+    expect_equal(get_treatment(x), "milk_first")
 })

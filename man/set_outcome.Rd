@@ -5,26 +5,29 @@
 \alias{get_outcome}
 \title{Use \code{outcome} Attribute for a \code{causal_tbl}}
 \usage{
-set_outcome(x, .outcome)
+set_outcome(data, outcome)
 
-get_outcome(x)
+get_outcome(data)
 }
 \arguments{
-\item{x}{a \code{causal_tbl}}
+\item{data}{a data frame or \code{causal_tbl}}
 
-\item{.outcome}{column name of outcome as a string.}
+\item{outcome}{column name of outcome (tidy-selected)}
 }
 \value{
-for \code{set_outcome()}, a \code{causal_tbl}, otherwise the column name of the outcome
+A \code{causal_tbl}, otherwise the column name of the outcome
+
+For \code{get_outcome()} the column name of the outcome variable
 }
 \description{
 Use \code{outcome} Attribute for a \code{causal_tbl}
 }
 \examples{
-causal_tbl(
+data <- data.frame(
   milk_first = c(0, 1, 0, 1, 1, 0, 0, 1),
-  guess = c(0, 1, 0, 1, 1, 0, 0, 1),
-  correct = c(1, 1, 1, 1, 1, 1, 1, 1)
+  guess = c(0, 1, 0, 1, 1, 0, 0, 1)
 ) |>
-set_outcome("correct")
+  set_outcome(guess)
+print(data) # a causal_tbl
+get_outcome(data)
 }

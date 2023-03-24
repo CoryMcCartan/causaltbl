@@ -1,3 +1,5 @@
+# Constructors and coercion ---------------------------------------------------
+
 # Main constructor
 #' @describeIn causal_tbl Construct a `causal_tbl` with no checks
 #' @export
@@ -14,8 +16,16 @@ new_causal_tbl <- function(..., .outcome=NULL, .treatment=NULL) {
 }
 
 validate_causal_tbl <- function(data, call = parent.frame()) {
-    # checks of attributes
-    # TODO
+    cols <- attr(data, "causal_cols")
+    if (!is.list(cols)) {
+        cli_abort("{.arg {deparse(substitute(data))}} must have a
+                  {.code causal_cols} attribute which is a list.", call=call)
+    }
+
+    if (!is.null(cols$outcome) && !is.character(cols$outcome))
+        cli_abort("The `outcome` column must be stored as a string.", call=call)
+    if (!is.null(cols$treatment) && !is.character(cols$treatment))
+        cli_abort("The `treatment` column must be stored as a string.", call=call)
 
     data
 }
@@ -23,7 +33,8 @@ validate_causal_tbl <- function(data, call = parent.frame()) {
 reconstruct.causal_tbl <- function(data, old) {
     classes <- c("tbl_df", "tbl", "data.frame")
     if (!is.data.frame(data)) {
-        cli_abort("{.arg data} must be a data frame.", call=parent.frame())
+        cli_abort("{.arg {deparse(substittue(data))}} must be a data frame.",
+                  call=parent.frame())
     }
 
     if (inherits(data, "grouped_df"))
@@ -31,18 +42,22 @@ reconstruct.causal_tbl <- function(data, old) {
     if (inherits(data, "rowwise_df"))
         classes <- c("rowwise_df", classes)
 
+    if (is.null(causal_cols(data))) {
+        causal_cols(data) = list(outcome = NULL, treatment = NULL)
+    }
+
     if (!missing(old)) {
-        if (attr(old, "causal_cols")$outcome %in% names(data)) {
-            attr(data, "causal_cols")[['outcome']] <- attr(old, "causal_cols")$outcome
+        if (col <- get_outcome(old) %in% names(data)) {
+            set_outcome(data, col)
         }
-        if (attr(old, "causal_cols")$treatment %in% names(data)) {
-            attr(data, "causal_cols")[['treatment']] <- attr(old, "treatment")$outcome
+        if (col <- get_treatment(old) %in% names(data)) {
+            set_treatment(data, col)
         }
 
-        other_csl_cols <- setdiff(names(attr(old, "causal_cols")), names(attr(data, "causal_cols")))
+        other_csl_cols <- setdiff(names(causal_cols(old)), names(causal_cols(data)))
         if (length(other_csl_cols) > 1) {
             for (i in seq_len(length(other_csl_cols))) {
-                attr(data, "causal_cols")[[other_csl_cols[i]]] <- attr(old, "causal_cols")[[other_csl_cols[i]]]
+                causal_cols(data)[[other_csl_cols[i]]] <- causal_cols(old)[[other_csl_cols[i]]]
             }
         }
     }
@@ -73,11 +88,15 @@ reconstruct.causal_tbl <- function(data, old) {
 #'
 #' @export
 causal_tbl <- function(..., .outcome=NULL, .treatment=NULL) {
-    new_causal_tbl(
-        vctrs::df_list(...),
-        .outcome=.outcome,
-        .treatment=.treatment
-    )
+    data = vctrs::df_list(...)
+    if (!missing(.outcome)) {
+        outcome <- single_col_name(enquo(.outcome), data, "outcome")
+    }
+    if (!missing(.treatment)) {
+        treatment <- single_col_name(enquo(.treatment), data, "treatment")
+    }
+
+    new_causal_tbl(data, .outcome=.outcome, .treatment=.treatment)
 }
 
 
@@ -85,8 +104,30 @@ causal_tbl <- function(..., .outcome=NULL, .treatment=NULL) {
 #' @param x A data frame to be coerced
 #' @export
 as_causal_tbl <- function(x) {
-    reconstruct.causal_tbl(x)
+    if (inherits(x, "causal_tbl")) {
+        x
+    } else if (is.data.frame(x)) {
+        reconstruct.causal_tbl(x)
+    } else {
+        new_causal_tbl(x)
+    }
 }
+
+assert_causal_tbl <- function(data, arg) {
+    if (!inherits(data, "causal_tbl")) {
+        cli_abort("{.arg {deparse(substitute(data))}} must be a {.cls causal_tbl}.",
+                  call=parent.frame())
+    }
+}
+assert_df <- function(data, arg) {
+    if (!is.data.frame(data)) {
+        cli_abort("{.arg {deparse(substitute(data))}} must be a data frame.",
+                  call=parent.frame())
+    }
+}
+
+
+# Printing -----------------------------------------------------------------
 
 #' @importFrom pillar tbl_sum
 #' @method tbl_sum causal_tbl

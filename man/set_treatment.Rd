@@ -5,25 +5,29 @@
 \alias{get_treatment}
 \title{Use \code{treatment} Attribute for a \code{causal_tbl}}
 \usage{
-set_treatment(x, .treatment)
+set_treatment(data, treatment)
 
-get_treatment(x)
+get_treatment(data)
 }
 \arguments{
-\item{x}{a \code{causal_tbl}}
+\item{data}{a data frame or \code{causal_tbl}}
 
-\item{.treatment}{column name of treatment as a string.}
+\item{treatment}{column name of treatment (tidy-selected)}
 }
 \value{
-for \code{set_treatment()}, a \code{causal_tbl}, otherwise the column name of the treatment
+A \code{causal_tbl}
+
+For \code{get_treatment()} the column name of the treatment variable
 }
 \description{
 Use \code{treatment} Attribute for a \code{causal_tbl}
 }
 \examples{
-causal_tbl(
+data <- data.frame(
   milk_first = c(0, 1, 0, 1, 1, 0, 0, 1),
   guess = c(0, 1, 0, 1, 1, 0, 0, 1)
 ) |>
-set_treatment("milk_first")
+  set_treatment(milk_first)
+print(data) # a causal_tbl
+get_treatment(data)
 }
