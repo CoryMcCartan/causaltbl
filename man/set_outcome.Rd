@@ -3,24 +3,30 @@
 \name{set_outcome}
 \alias{set_outcome}
 \alias{get_outcome}
-\title{Use \code{outcome} Attribute for a \code{causal_tbl}}
+\alias{has_outcome}
+\title{Define an outcome variable for a \code{causal_tbl}}
 \usage{
 set_outcome(data, outcome)
 
 get_outcome(data)
+
+has_outcome(data)
 }
 \arguments{
 \item{data}{a data frame or \code{causal_tbl}}
 
-\item{outcome}{column name of outcome (tidy-selected)}
+\item{outcome}{the column containing the outcome variable (tidy-selected).
+Must be numeric or coercible to numeric.}
 }
 \value{
-A \code{causal_tbl}, otherwise the column name of the outcome
+A \code{causal_tbl}
 
 For \code{get_outcome()} the column name of the outcome variable
+
+For \code{has_outcome()}, \code{TRUE} if there is an outcome variable set
 }
 \description{
-Use \code{outcome} Attribute for a \code{causal_tbl}
+Define an outcome variable for a \code{causal_tbl}
 }
 \examples{
 data <- data.frame(
