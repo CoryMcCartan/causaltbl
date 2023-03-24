@@ -8,7 +8,7 @@ new_causal_tbl <- function(..., .outcome=NULL, .treatment=NULL) {
     )
 
     # set attributes for .outcome, .treatment
-    # TODO these are in `attr<-`(out, "causal_cols", ...)
+    attr(out, "causal_cols") <- list(outcome = .outcome, treatment = .treatment)
 
     out
 }
@@ -32,9 +32,19 @@ reconstruct.causal_tbl <- function(data, old) {
         classes <- c("rowwise_df", classes)
 
     if (!missing(old)) {
-        # fix attributes
-        # TODO adjust approach from
-        # https://github.com/alarm-redist/redist/blob/a8909a926026af7f8237c14b5238529556bb14c2/R/redist_map.R#L97
+        if (attr(old, "causal_cols")$outcome %in% names(data)) {
+            attr(data, "causal_cols")[['outcome']] <- attr(old, "causal_cols")$outcome
+        }
+        if (attr(old, "causal_cols")$treatment %in% names(data)) {
+            attr(data, "causal_cols")[['treatment']] <- attr(old, "treatment")$outcome
+        }
+
+        other_csl_cols <- setdiff(names(attr(old, "causal_cols")), names(attr(data, "causal_cols")))
+        if (length(other_csl_cols) > 1) {
+            for (i in seq_len(length(other_csl_cols))) {
+                attr(data, "causal_cols")[[other_csl_cols[i]]] <- attr(old, "causal_cols")[[other_csl_cols[i]]]
+            }
+        }
     }
 
     class(data) <- c("causal_tbl", classes)
