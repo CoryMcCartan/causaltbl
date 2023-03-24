@@ -4,8 +4,6 @@
 \alias{set_treatment}
 \alias{get_treatment}
 \alias{has_treatment}
-\alias{get_panel}
-\alias{has_panel}
 \title{Define a treatment variable for a \code{causal_tbl}}
 \usage{
 set_treatment(data, treatment)
@@ -13,10 +11,6 @@ set_treatment(data, treatment)
 get_treatment(data)
 
 has_treatment(data)
-
-get_panel(data)
-
-has_panel(data)
 }
 \arguments{
 \item{data}{a data frame or \code{causal_tbl}}
@@ -30,10 +24,6 @@ A \code{causal_tbl}
 For \code{get_treatment()} the column name of the treatment variable
 
 For \code{has_treatment()}, \code{TRUE} if there is a treatment variable set
-
-For \code{get_panel()} a list with the column names of the unit and time variables
-
-For \code{has_panel()}, \code{TRUE} if there is panel data structure
 }
 \description{
 Define a treatment variable for a \code{causal_tbl}

@@ -4,6 +4,7 @@ test_that("getting and setting treatment works", {
 
     x_trt = set_treatment(x, milk_first)
     expect_equal(get_treatment(x_trt), "milk_first")
+    expect_true(has_treatment(x_trt))
     # check non-tidy works too
     x_trt = set_treatment(x, "milk_first")
     expect_equal(get_treatment(x_trt), "milk_first")
@@ -24,6 +25,7 @@ test_that("getting and setting outcome works", {
 
     x_out = set_outcome(x, guess)
     expect_equal(get_outcome(x_out), "guess")
+    expect_true(has_outcome(x_out))
 
     x_out_trt = set_treatment(x_out, milk_first)
     expect_equal(get_outcome(x_out_trt), "guess")
@@ -52,6 +54,7 @@ test_that("getting and setting panel data", {
 
     x_panel = set_panel(x, unit=id, time=year)
     expect_equal(get_panel(x_panel), list(unit = "id", time = "year"))
+    expect_true(has_panel(x_panel))
     expect_no_error(validate_causal_tbl(x_panel))
 
     expect_error(set_panel(x, unit=id), "for `time`")

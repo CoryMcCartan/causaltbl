@@ -117,13 +117,13 @@ set_panel <- function(data, unit, time) {
     data
 }
 
-#' @rdname set_treatment
+#' @rdname set_panel
 #' @return For `get_panel()` a list with the column names of the unit and time variables
 #' @export
 get_panel <- function(data) {
     causal_cols(data)$panel
 }
-#' @rdname set_treatment
+#' @rdname set_panel
 #' @return For `has_panel()`, `TRUE` if there is panel data structure
 #' @export
 has_panel <- function(data) {

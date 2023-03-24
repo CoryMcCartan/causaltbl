@@ -2,9 +2,15 @@
 % Please edit documentation in R/causal_cols.R
 \name{set_panel}
 \alias{set_panel}
+\alias{get_panel}
+\alias{has_panel}
 \title{Define a panel data structure for a \code{causal_tbl}}
 \usage{
 set_panel(data, unit, time)
+
+get_panel(data)
+
+has_panel(data)
 }
 \arguments{
 \item{data}{a data frame or \code{causal_tbl}}
@@ -15,6 +21,10 @@ set_panel(data, unit, time)
 }
 \value{
 A \code{causal_tbl}
+
+For \code{get_panel()} a list with the column names of the unit and time variables
+
+For \code{has_panel()}, \code{TRUE} if there is panel data structure
 }
 \description{
 Define a panel data structure for a \code{causal_tbl}

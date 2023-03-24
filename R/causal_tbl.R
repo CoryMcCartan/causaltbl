@@ -22,10 +22,22 @@ validate_causal_tbl <- function(data, call = parent.frame()) {
                   {.code causal_cols} attribute which is a list.", call=call)
     }
 
-    if (!is.null(cols$outcome) && !is.character(cols$outcome))
-        cli_abort("The `outcome` column must be stored as a string.", call=call)
-    if (!is.null(cols$treatment) && !is.character(cols$treatment))
-        cli_abort("The `treatment` column must be stored as a string.", call=call)
+    if (!"outcome" %in% names(cols))
+        cli_abort("Missing `outcome` in causal_cols", call=call)
+    if (!"treatment" %in% names(cols))
+        cli_abort("Missing `outcome` in causal_cols", call=call)
+    if (!is.null(cols$outcome)) {
+        if (!is.character(cols$outcome))
+            cli_abort("The `outcome` causal_cols must be stored as a string.", call=call)
+        if (!is.numeric(data[[cols$outcome]]))
+            cli_abort("The `outcome` column must be numeric.", call=call)
+    }
+    if (!is.null(cols$treatment)) {
+        if (!is.character(cols$treatment))
+            cli_abort("The `treatment` causal_cols must be stored as a string.", call=call)
+        if (!is.numeric(data[[cols$treatment]]))
+            cli_abort("The `treatment` column must be numeric.", call=call)
+    }
 
     data
 }
@@ -42,10 +54,12 @@ reconstruct.causal_tbl <- function(data, old) {
     if (inherits(data, "rowwise_df"))
         classes <- c("rowwise_df", classes)
 
+    # initialize blank core causal_col if none exists
     if (is.null(causal_cols(data))) {
         causal_cols(data) = list(outcome = NULL, treatment = NULL)
     }
 
+    # copy causal_col from old object as needed/available
     if (!missing(old)) {
         if (col <- get_outcome(old) %in% names(data)) {
             set_outcome(data, col)
