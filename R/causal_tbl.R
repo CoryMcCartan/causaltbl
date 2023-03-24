@@ -61,10 +61,10 @@ reconstruct.causal_tbl <- function(data, old) {
 
     # copy causal_col from old object as needed/available
     if (!missing(old)) {
-        if (col <- get_outcome(old) %in% names(data)) {
+        if (!is.null(col <- get_outcome(old)) && col %in% names(data)) {
             set_outcome(data, col)
         }
-        if (col <- get_treatment(old) %in% names(data)) {
+        if (!is.null(col <- get_treatment(old)) && col %in% names(data)) {
             set_treatment(data, col)
         }
 
@@ -140,6 +140,38 @@ assert_df <- function(data, arg) {
     }
 }
 
+# Slicing and renaming handlers --------------------------------------------
+
+#' @export
+`[.causal_tbl` <- function(x, i) {
+    old_names <- names(x)
+    out <- NextMethod()
+
+    cols <- causal_cols(x)
+    for (col in names(cols)) {
+        if (is.null(cols[[col]])) next
+        if (!cols[[col]] %in% old_names[i]) {
+            causal_cols(out)[[col]] = NULL
+        }
+    }
+
+    out
+}
+
+#' @export
+`names<-.causal_tbl` <- function(x, value) {
+    old_names <- names(x)
+    out <- NextMethod()
+
+    cols <- causal_cols(x)
+    for (col in names(cols)) {
+        if (is.null(cols[[col]])) next
+        causal_cols(out)[[col]] = value[which(cols[[col]] == old_names)]
+    }
+
+    out
+}
+
 
 # Printing -----------------------------------------------------------------
 
@@ -147,5 +179,7 @@ assert_df <- function(data, arg) {
 #' @method tbl_sum causal_tbl
 #' @export
 tbl_sum.causal_tbl <- function(x, ...) {
-    c("A causal_tbl" = pillar::dim_desc(x))
+    lines <- c("A causal_tbl" = pillar::dim_desc(x),
+               NextMethod())
+    lines[-2] # remove tbl line
 }

@@ -15,6 +15,7 @@ Imports:
     vctrs,
     pillar
 Suggests: 
+    dplyr,
     testthat (>= 3.0.0)
 License: MIT + file LICENSE
 Encoding: UTF-8

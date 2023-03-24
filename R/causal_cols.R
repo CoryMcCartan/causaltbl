@@ -111,8 +111,8 @@ set_panel <- function(data, unit, time) {
     data <- as_causal_tbl(data)
     col_unit <- single_col_name(enquo(unit), data, "unit")
     col_time <- single_col_name(enquo(time), data, "time")
-    causal_cols(data)$panel <- list(unit = col_unit,
-                                    time = col_time)
+    causal_cols(data)$panel_unit = col_unit
+    causal_cols(data)$panel_time = col_time
     data[[col_time]] <- vctrs::vec_cast(data[[col_time]], integer(), x_arg=col_time)
     data
 }
@@ -121,13 +121,17 @@ set_panel <- function(data, unit, time) {
 #' @return For `get_panel()` a list with the column names of the unit and time variables
 #' @export
 get_panel <- function(data) {
-    causal_cols(data)$panel
+    list(
+        unit = causal_cols(data)$panel_unit,
+        time = causal_cols(data)$panel_time
+    )
 }
 #' @rdname set_panel
 #' @return For `has_panel()`, `TRUE` if there is panel data structure
 #' @export
 has_panel <- function(data) {
-    is.list(causal_cols(data)$panel)
+    !is.null(causal_cols(data)$panel_unit) &&
+        !is.null(causal_cols(data)$panel_time)
 }
 
 
