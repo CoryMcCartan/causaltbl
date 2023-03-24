@@ -11,6 +11,7 @@ Description: Provides a 'causal_tbl' class for causal inference. A 'causal_tbl'
 Imports:
     cli,
     tibble (>= 3.0.0),
+    tidyselect,
     vctrs,
     pillar
 Suggests: 
