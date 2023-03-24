@@ -62,10 +62,10 @@ reconstruct.causal_tbl <- function(data, old) {
     # copy causal_col from old object as needed/available
     if (!missing(old)) {
         if (!is.null(col <- get_outcome(old)) && col %in% names(data)) {
-            set_outcome(data, col)
+            data <- set_outcome(data, col)
         }
         if (!is.null(col <- get_treatment(old)) && col %in% names(data)) {
-            set_treatment(data, col)
+            data <- set_treatment(data, col)
         }
 
         other_csl_cols <- setdiff(names(causal_cols(old)), names(causal_cols(data)))
