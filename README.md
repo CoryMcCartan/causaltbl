@@ -6,6 +6,7 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/CoryMcCartan/causaltbl/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/CoryMcCartan/causaltbl/actions/workflows/R-CMD-check.yaml)
+[![codecov](https://codecov.io/github/CoryMcCartan/causaltbl/branch/main/graph/badge.svg?token=TXL7DJG9U9)](https://codecov.io/github/CoryMcCartan/causaltbl)
 <!-- badges: end -->
 
 This package provides a `causal_tbl` class for causal inference. A
