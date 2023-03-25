@@ -24,7 +24,9 @@ Default is \code{get_outcome()}}
 \value{
 A \code{causal_tbl}
 
-For \code{get_treatment()} the column name of the treatment variable
+For \code{get_treatment()} the column name of the treatment variable.
+If an outcome variable has been set, the output \code{name()} will be the
+outcome column.
 
 For \code{has_treatment()}, \code{TRUE} if there is a treatment variable set
 }

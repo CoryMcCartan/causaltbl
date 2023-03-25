@@ -30,11 +30,11 @@ test_that("causal_tbl attributes", {
 
     x <- causal_tbl(milk_first = c(0, 1, 0, 1, 1, 0, 0, 1),
                     guess = c(0, 1, 0, 1, 1, 0, 0, 1),
-                    .outcome = "guess",
-                    .treatment = "milk_first")
+                    .outcome = guess,
+                    .treatment = milk_first)
 
     expect_s3_class(x, "causal_tbl")
 
     expect_equal(get_outcome(x), "guess")
-    expect_equal(get_treatment(x), "milk_first")
+    expect_equal(get_treatment(x), c(guess="milk_first"))
 })

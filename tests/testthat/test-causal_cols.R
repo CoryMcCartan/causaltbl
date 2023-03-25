@@ -29,7 +29,7 @@ test_that("getting and setting outcome works", {
 
     x_out_trt = set_treatment(x_out, milk_first)
     expect_equal(get_outcome(x_out_trt), "guess")
-    expect_equal(get_treatment(x_out_trt), "milk_first")
+    expect_equal(get_treatment(x_out_trt), c(guess="milk_first"))
 
     x = data.frame(milk_first = c(0, 1, 0, 1, 1, 0, 0, 1),
                    guess = c(0, 1, 0, 1, 1, 0, 0, 1))

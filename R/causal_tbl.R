@@ -10,7 +10,10 @@ new_causal_tbl <- function(..., .outcome=NULL, .treatment=NULL) {
     )
 
     # set attributes for .outcome, .treatment
-    attr(out, "causal_cols") <- list(outcome = .outcome, treatment = .treatment)
+    cols <- list(outcome = .outcome, treatment = .treatment)
+    if (!is.null(.treatment))
+        names(cols$treatment) = cols$outcome
+    attr(out, "causal_cols") <- cols
 
     out
 }
@@ -56,11 +59,16 @@ reconstruct.causal_tbl <- function(data, old) {
 
     # initialize blank core causal_col if none exists
     if (is.null(causal_cols(data))) {
-        causal_cols(data) = list(outcome = NULL, treatment = NULL)
+        if (missing(old)) {
+            causal_cols(data) = list(outcome = NULL, treatment = NULL)
+        } else {
+            causal_cols(data) = causal_cols(old)
+        }
     }
 
     # copy causal_col from old object as needed/available
-    if (!missing(old)) {
+    # if (!missing(old)) {
+    if (FALSE) {
         if (!is.null(col <- get_outcome(old)) && col %in% names(data)) {
             data <- set_outcome(data, col)
         }
@@ -83,8 +91,45 @@ reconstruct.causal_tbl <- function(data, old) {
 #' Build a causal data frame
 #'
 #' A `causal_tbl` is a tibble with additional attribute information stored
-#' in `causal_cols`.  See the 'Details' for more on the structure of this
+#' in `causal_cols`.  See the 'Internal structure' for more on the structure of this
 #' attribute.
+#'
+#' At its core, a `causal_tbl` is just a tibble, and it should behave like
+#' a tibble in every meaningful way.
+#' What sets a `causal_tbl` apart is that it keeps track of *causal columns*:
+#' variables or objects which play a particular causal role.
+#' These can be accessed with the various getter and setter functions included
+#' in this package, like [get_outcome()] and [set_outcome()].
+#'
+#' # Internal structure
+#' The `causal_cols` attribute is considered mostly internal, and end users
+#' do not have to worry about its internal structure. However, for those
+#' developing packages based off of `causal_tbl`, it is useful to understand the
+#' underlying structure of `causal_cols`.
+#'
+#' The `causal_cols` attribute is a named list, with each element corresponding
+#' to a type of causal variable or object: `outcome`, `treatment`, `unit`, but
+#' also potentially `pscore`, `matches`, `model`, etc.
+#' Each of these elements is a character vector, with each element being a name
+#' of a column in the data frame.
+#' For some variables, this vector should be of length 1, but for other
+#' variables, there may be multiple columns of that type.
+#' So, for example, if a package author was developing methods for causal
+#' inference with multiple continuous treatments, the `treatment` element
+#' of `causal_cols` could have an entry for each treatment column.
+#'
+#' The optional [names()] of the columns within a particular element of
+#' `causal_cols` convey information on any associated variable.  For example,
+#' the treatment variable is by default associated with a particular outcome.
+#' And a propensity score or outcome model is associated with a particular
+#' treatment or outcome variable.
+#'
+#' The column names stored within any part of `causal_cols` will be automatically
+#' updated if columns are renamed, or set to `NULL` if columns are dropped.
+#' This reassignment happens automatically and silently in all cases.
+#' It is the responsibility of implementers of particular methods to check
+#' that a `causal_tbl` has the necessary columns set via helpers like
+#' [has_treatment()], [has_outcome()], etc.
 #'
 #' @param ... passed on to [tibble()]
 #' @param .outcome the column containing the outcome variable (tidy-selected).
@@ -210,7 +255,8 @@ tbl_format_setup.causal_tbl <- function(x, width, ..., n, max_extra_cols, max_fo
 ctl_new_pillar.causal_tbl <- function(controller, x, width, ..., title = NULL) {
     out <- NextMethod()
     cols <- causal_cols(controller)
-    marker_type = names(cols)[match(title, cols)]
+    matched_types = vapply(cols, function(y) match(title, y)[1], 0L)
+    marker_type = names(which(!is.na(matched_types)))
     marker = if (length(marker_type) == 0 || is.na(marker_type)) {
         ""
     } else {

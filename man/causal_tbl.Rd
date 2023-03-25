@@ -28,8 +28,16 @@ A \code{causal_tbl} object
 }
 \description{
 A \code{causal_tbl} is a tibble with additional attribute information stored
-in \code{causal_cols}.  See the 'Details' for more on the structure of this
+in \code{causal_cols}.  See the 'Internal structure' for more on the structure of this
 attribute.
+}
+\details{
+At its core, a \code{causal_tbl} is just a tibble, and it should behave like
+a tibble in every meaningful way.
+What sets a \code{causal_tbl} apart is that it keeps track of \emph{causal columns}:
+variables or objects which play a particular causal role.
+These can be accessed with the various getter and setter functions included
+in this package, like \code{\link[=get_outcome]{get_outcome()}} and \code{\link[=set_outcome]{set_outcome()}}.
 }
 \section{Functions}{
 \itemize{
@@ -38,6 +46,37 @@ attribute.
 \item \code{as_causal_tbl()}: Coerce a data frame to a \code{causal_tbl}
 
 }}
+\section{Internal structure}{
+The \code{causal_cols} attribute is considered mostly internal, and end users
+do not have to worry about its internal structure. However, for those
+developing packages based off of \code{causal_tbl}, it is useful to understand the
+underlying structure of \code{causal_cols}.
+
+The \code{causal_cols} attribute is a named list, with each element corresponding
+to a type of causal variable or object: \code{outcome}, \code{treatment}, \code{unit}, but
+also potentially \code{pscore}, \code{matches}, \code{model}, etc.
+Each of these elements is a character vector, with each element being a name
+of a column in the data frame.
+For some variables, this vector should be of length 1, but for other
+variables, there may be multiple columns of that type.
+So, for example, if a package author was developing methods for causal
+inference with multiple continuous treatments, the \code{treatment} element
+of \code{causal_cols} could have an entry for each treatment column.
+
+The optional \code{\link[=names]{names()}} of the columns within a particular element of
+\code{causal_cols} convey information on any associated variable.  For example,
+the treatment variable is by default associated with a particular outcome.
+And a propensity score or outcome model is associated with a particular
+treatment or outcome variable.
+
+The column names stored within any part of \code{causal_cols} will be automatically
+updated if columns are renamed, or set to \code{NULL} if columns are dropped.
+This reassignment happens automatically and silently in all cases.
+It is the responsibility of implementers of particular methods to check
+that a \code{causal_tbl} has the necessary columns set via helpers like
+\code{\link[=has_treatment]{has_treatment()}}, \code{\link[=has_outcome]{has_outcome()}}, etc.
+}
+
 \examples{
 causal_tbl(
   milk_first = c(0, 1, 0, 1, 1, 0, 0, 1),

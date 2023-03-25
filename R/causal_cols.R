@@ -30,6 +30,9 @@ set_outcome <- function(data, outcome) {
     col <- single_col_name(enquo(outcome), data, "outcome")
     causal_cols(data)$outcome <- col
     data[[col]] <- vctrs::vec_cast(data[[col]], numeric(), x_arg=col)
+    if (has_treatment(data)) {
+        names(causal_cols(data)$treatment[1]) <- col
+    }
     data
 }
 
@@ -37,7 +40,7 @@ set_outcome <- function(data, outcome) {
 #' @return For `get_outcome()` the column name of the outcome variable
 #' @export
 get_outcome <- function(data) {
-    causal_cols(data)$outcome
+    causal_cols(data)$outcome[1]
 }
 #' @rdname set_outcome
 #' @return For `has_outcome()`, `TRUE` if there is an outcome variable set
@@ -72,14 +75,19 @@ set_treatment <- function(data, treatment, outcome = get_outcome()) {
     col <- single_col_name(enquo(treatment), data, "treatment")
     causal_cols(data)$treatment <- col
     data[[col]] <- vctrs::vec_cast(data[[col]], numeric(), x_arg=col)
+    if (has_outcome(data)) {
+        names(causal_cols(data)$treatment) <- get_outcome(data)
+    }
     data
 }
 
 #' @rdname set_treatment
-#' @return For `get_treatment()` the column name of the treatment variable
+#' @return For `get_treatment()` the column name of the treatment variable.
+#'   If an outcome variable has been set, the output `name()` will be the
+#'   outcome column.
 #' @export
 get_treatment <- function(data) {
-    causal_cols(data)$treatment
+    causal_cols(data)$treatment[1]
 }
 #' @rdname set_treatment
 #' @return For `has_treatment()`, `TRUE` if there is a treatment variable set
