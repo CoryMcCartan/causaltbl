@@ -247,7 +247,7 @@ tbl_format_header.causal_tbl <- function(x, setup, ...) {
 #' @method tbl_format_setup causal_tbl
 #' @export
 tbl_format_setup.causal_tbl <- function(x, width, ..., n, max_extra_cols, max_footer_lines, focus) {
-    NextMethod(focus=unlist(causal_cols(x)))
+    NextMethod(focus=unique(unlist(causal_cols(x))))
 }
 
 
@@ -258,14 +258,15 @@ ctl_new_pillar.causal_tbl <- function(controller, x, width, ..., title = NULL) {
     out <- NextMethod()
     cols <- causal_cols(controller)
     matched_types = vapply(cols, function(y) match(title, y)[1], 0L)
-    marker_type = names(which(!is.na(matched_types)))
-    marker = if (length(marker_type) == 0 || is.na(marker_type)) {
+    marker_type = names(which(!is.na(matched_types)))[1] # first match only
+    marker = c(
+        outcome="[out]", treatment="[trt]",
+        panel_unit="[unit]", panel_time="[time]"
+    )[marker_type]
+    marker = if (length(marker) == 0 || is.na(marker)) {
         ""
     } else {
-        pillar::style_subtle(c(
-            outcome="[out]", treatment="[trt]",
-            panel_unit="[unit]", panel_time="[time]"
-        )[marker_type])
+        pillar::style_subtle(marker)
     }
 
     pillar::new_pillar(list(

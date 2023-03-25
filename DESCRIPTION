@@ -9,6 +9,7 @@ Description: Provides a 'causal_tbl' class for causal inference. A 'causal_tbl'
     outcome, and provides functionality to store models and their fitted
     values as columns in a data frame.
 Imports:
+    rlang,
     cli,
     tibble (>= 3.0.0),
     tidyselect,

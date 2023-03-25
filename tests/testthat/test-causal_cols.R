@@ -72,3 +72,31 @@ test_that("getting and setting panel data", {
     expect_error(set_panel(x, unit=id, time=not_a_column), "doesn't exist")
 })
 
+test_that("lower-level getting and setting", {
+    x <- causal_tbl(
+        id = c("a", "a", "a", "a", "b", "b", "b", "b"),
+        year = rep(2015:2018, 2),
+        trt = c(0, 0, 0, 0, 0, 0, 1, 1),
+        y = c(1, 3, 2, 3, 2, 4, 4, 5)
+    )
+
+    x2 <- set_causal_col(x, "treatment", y=trt, id=year)
+    expect_equal(get_treatment(x2), c(y="trt"))
+    expect_length(causal_cols(x2)$treatment, 2)
+
+    x3 <- add_causal_col(x, "treatment", y=trt)
+    expect_equal(get_treatment(x3), c(y="trt"))
+    expect_length(causal_cols(x3)$treatment, 1)
+    expect_error(add_causal_col(x, "treatment", y=trt, y2=trt2), "more than one")
+
+    x3 <- set_causal_col(x3, "treatment", id=year)
+    expect_equal(get_treatment(x3), c(id="year"))
+    expect_length(causal_cols(x3)$treatment, 1)
+    expect_error(set_causal_col(x3, "treatment"), "Must select")
+
+    x4 <- add_causal_col(x, "pscore", trt=id, ptype=factor())
+    expect_type(causal_cols(x4)$pscore, "character")
+    expect_s3_class(x4[[causal_cols(x4)$pscore]], "factor")
+    expect_equal(get_causal_col(x4, "pscore"), c(trt="id"))
+})
+

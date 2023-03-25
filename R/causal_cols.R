@@ -1,11 +1,77 @@
-# internal accessors
+#' Work directly with `causal_cols`
+#'
+#' These functions are aimed at developers who wish to extend `causal_tbl`
+#' functionality.
+#'
+#' @param data A [causal_tbl].
+#' @param value New value for `causal_cols`.
+#' @param ... Named attributes to add to `data`'s causal attributes.
+#' @param what The causal column to get or set.
+#' @param ptype A type to coerce a single added column to.
+#'
+#' @returns Varies. Setter methods return the original `data`, perhaps invisibly.
+#'
+#' @examples
+#' data <- data.frame(
+#'   milk_first = c(0, 1, 0, 1, 1, 0, 0, 1),
+#'   guess = c(0, 1, 0, 1, 1, 0, 0, 1)
+#' ) |>
+#'   set_causal_col("treatment", guess=milk_first)
+#' print(data)
+#' get_causal_col(data, "treatment")
+#' causal_cols(data)
+#' @export
 causal_cols <- function(data) {
     attr(data, "causal_cols")
 }
+#' @describeIn causal_cols Set `causal_cols`
+#' @export
 `causal_cols<-` = function(data, value) {
     attr(data, "causal_cols") <- value
     data
 }
+
+#' @describeIn causal_cols Set column(s) for a `causal_col`
+#' @export
+set_causal_col <- function(data, what, ...) {
+    data <- as_causal_tbl(data)
+    dots <- rlang::quo(c(...))
+    cols <- multi_col_name(dots, data, what)
+    causal_cols(data)[[what]] <- cols
+    data
+}
+#' @describeIn causal_cols Add a single column to a `causal_col`
+#' @export
+add_causal_col <- function(data, what, ..., ptype=NULL) {
+    data <- as_causal_tbl(data)
+    dots <- enquos(...)
+    if (length(dots) > 1) {
+        cli_abort("Use {.fn set_causal_col} to add more than one column at a time")
+    }
+
+    col <- single_col_name(dots[[1]], data, what)
+    names(col) = names(dots)
+
+    if (what %in% names(causal_cols(data))) {
+        causal_cols(data)[[what]] <- c(causal_cols(data)[[what]], col)
+    } else {
+        causal_cols(data)[[what]] <- col
+    }
+
+    if (!is.null(ptype)) {
+        data[[col]] <- vctrs::vec_cast(data[[col]], ptype, x_arg=col)
+    }
+    data
+}
+
+#' @describeIn causal_cols Get the column name of the requested variable
+#' @export
+get_causal_col <- function(data, what) {
+    causal_cols(data)[[what]]
+}
+
+
+
 
 
 #' Define an outcome variable for a `causal_tbl`
@@ -145,42 +211,6 @@ has_panel <- function(data) {
 }
 
 
-#' Define Custom Causal Attributes
-#'
-#' @param data a data frame or `causal_tbl`
-#' @param ... named attributes to add to `data`'s causal attributes
-#'
-#' @return A `causal_tbl`
-#' @export
-#'
-#' @examples
-#' data <- data.frame(
-#'   milk_first = c(0, 1, 0, 1, 1, 0, 0, 1),
-#'   guess = c(0, 1, 0, 1, 1, 0, 0, 1)
-#' ) |>
-#'   set_causal_col(milk_first, "treatment")
-#' print(data) # a causal_tbl
-#' get_causal_col(data, "treatment")
-set_causal_col <- function(data, ...) {
-    data <- as_causal_tbl(data)
-
-    data
-}
-
-#' @rdname set_causal_col
-#' @return For `get_causal_col()` the column name of the requested variable
-#' @param what the causal attribute to get
-#' @export
-get_causal_col <- function(data, what) {
-
-}
-
-#' @rdname set_causal_col
-#' @return For `add_causal_col()` A `causal_tbl`
-#' @export
-add_causal_col <- function(data, ...) {
-
-}
 
 
 # Helper
@@ -192,4 +222,15 @@ single_col_name <- function(expr, data, arg) {
         cli_abort("Only one column name is allowed for {.arg {arg}}", call=parent.frame())
     }
     names(data)[idx]
+}
+
+# Helper
+multi_col_name <- function(expr, data, arg) {
+    idx <- tidyselect::eval_select(expr, data, allow_rename=TRUE)
+    if (length(idx) == 0) {
+        cli_abort("Must select a column for {.arg {arg}}", call=parent.frame())
+    }
+    out <- names(data)[idx]
+    names(out) = names(idx)
+    out
 }
