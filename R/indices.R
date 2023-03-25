@@ -85,6 +85,6 @@ vec_ptype2.list.indices <- function(x, y, ...) list()
 vec_ptype2.indices.list <- function(x, y, ...) list()
 #' @importFrom vctrs vec_cast
 #' @export
-vec_cast.list.indices <- function(x, y, ...) as.list(x)
+vec_cast.list.indices <- function(x, to, ...) as.list(x)
 #' @export
-vec_cast.indices.list <- function(x, y, ...) indices(x)
+vec_cast.indices.list <- function(x, to, ...) indices(x)
