@@ -28,7 +28,7 @@ validate_causal_tbl <- function(data, call = parent.frame()) {
     if (!"outcome" %in% names(cols))
         cli_abort("Missing `outcome` in causal_cols", call=call)
     if (!"treatment" %in% names(cols))
-        cli_abort("Missing `outcome` in causal_cols", call=call)
+        cli_abort("Missing `treatment` in causal_cols", call=call)
     if (!is.null(cols$outcome)) {
         if (!is.character(cols$outcome))
             cli_abort("The `outcome` causal_cols must be stored as a string.", call=call)
@@ -48,7 +48,7 @@ validate_causal_tbl <- function(data, call = parent.frame()) {
 reconstruct.causal_tbl <- function(data, old) {
     classes <- c("tbl_df", "tbl", "data.frame")
     if (!is.data.frame(data)) {
-        cli_abort("{.arg {deparse(substittue(data))}} must be a data frame.",
+        cli_abort("{.arg {deparse(substitute(data))}} must be a data frame.",
                   call=parent.frame())
     }
 
@@ -63,24 +63,6 @@ reconstruct.causal_tbl <- function(data, old) {
             causal_cols(data) = list(outcome = NULL, treatment = NULL)
         } else {
             causal_cols(data) = causal_cols(old)
-        }
-    }
-
-    # copy causal_col from old object as needed/available
-    # if (!missing(old)) {
-    if (FALSE) {
-        if (!is.null(col <- get_outcome(old)) && col %in% names(data)) {
-            data <- set_outcome(data, col)
-        }
-        if (!is.null(col <- get_treatment(old)) && col %in% names(data)) {
-            data <- set_treatment(data, col)
-        }
-
-        other_csl_cols <- setdiff(names(causal_cols(old)), names(causal_cols(data)))
-        if (length(other_csl_cols) > 1) {
-            for (i in seq_len(length(other_csl_cols))) {
-                causal_cols(data)[[other_csl_cols[i]]] <- causal_cols(old)[[other_csl_cols[i]]]
-            }
         }
     }
 
@@ -189,15 +171,31 @@ assert_df <- function(data, arg) {
 
 #' @export
 `[.causal_tbl` <- function(x, i) {
-    old_names <- names(x)
+    new_names <- names(x)[i]
     out <- NextMethod()
 
     cols <- causal_cols(x)
     for (col in names(cols)) {
         if (is.null(cols[[col]])) next
-        if (!cols[[col]] %in% old_names[i]) {
-            causal_cols(out)[[col]] = NULL
+        # figure out what to subset to
+        keep = cols[[col]] %in% new_names
+        new_col = cols[[col]][keep]
+        # handle subsetting
+        if (length(new_col) == 0) { # causal_col removed (set to NULL)
+            new_col = list(NULL)
+            names(new_col) = col
+            causal_cols(out)[col] = new_col
+            next
+        } else if (!is.null(names(new_col))) {
+            nms <- new_names[match(names(new_col), new_names)]
+            if (all(is.na(nms))) {
+                nms = NULL
+            } else {
+                nms[is.na(nms)] = ""
+            }
+            names(new_col) = nms
         }
+        causal_cols(out)[[col]] = new_col
     }
 
     out
@@ -211,7 +209,11 @@ assert_df <- function(data, arg) {
     cols <- causal_cols(x)
     for (col in names(cols)) {
         if (is.null(cols[[col]])) next
-        causal_cols(out)[[col]] = value[which(cols[[col]] == old_names)]
+        new_col = value[which(cols[[col]] == old_names)]
+        if (!is.null(names(cols[[col]]))) {
+            names(new_col) = value[which(names(cols[[col]]) == old_names)]
+        }
+        causal_cols(out)[[col]] = new_col
     }
 
     out

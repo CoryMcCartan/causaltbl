@@ -15,7 +15,11 @@ test_that("getting and setting treatment works", {
     expect_no_error(validate_causal_tbl(x_trt))
     expect_equal(get_treatment(x_trt), "milk_first")
 
+    x_trt_out = set_outcome(x_trt, guess)
+    expect_equal(get_treatment(x_trt_out), c(guess="milk_first"))
+
     expect_error(set_treatment(x, not_a_column), "doesn't exist")
+    expect_error(set_treatment(x, c(milk_first, guess)), "Only one")
     expect_error(set_treatment(x, NULL), "Must select")
 })
 

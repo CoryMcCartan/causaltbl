@@ -50,7 +50,7 @@ jobs:
           upload-snapshots: true
 
       - name: Test coverage
-        if: matrix.os == 'ubuntu-latest'
+        if: runner.os == 'Linux'
         run: |
           covr::codecov(
             quiet = FALSE,

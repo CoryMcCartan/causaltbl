@@ -12,9 +12,11 @@ dplyr_reconstruct.causal_tbl <- function(data, template) {
     reconstruct.causal_tbl(data, template)
 }
 
+# nocov start
 register_s3_dplyr <- function() {
     vctrs::s3_register("dplyr::dplyr_reconstruct", "causal_tbl")
     vctrs::s3_register("dplyr::group_by", "causal_tbl")
     vctrs::s3_register("dplyr::ungroup", "causal_tbl")
     vctrs::s3_register("dplyr::rowwise", "causal_tbl")
 }
+# nocov end

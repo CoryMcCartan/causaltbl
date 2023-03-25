@@ -31,7 +31,7 @@ set_outcome <- function(data, outcome) {
     causal_cols(data)$outcome <- col
     data[[col]] <- vctrs::vec_cast(data[[col]], numeric(), x_arg=col)
     if (has_treatment(data)) {
-        names(causal_cols(data)$treatment[1]) <- col
+        names(causal_cols(data)$treatment)[1] <- col
     }
     data
 }
