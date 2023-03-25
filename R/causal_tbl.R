@@ -10,9 +10,9 @@ new_causal_tbl <- function(..., .outcome=NULL, .treatment=NULL) {
     )
 
     # set attributes for .outcome, .treatment
-    cols <- list(outcome = .outcome, treatment = .treatment)
+    cols <- list(outcomes = .outcome, treatments = .treatment)
     if (!is.null(.treatment))
-        names(cols$treatment) = cols$outcome
+        names(cols$treatments) = cols$outcomes
     attr(out, "causal_cols") <- cols
 
     out
@@ -25,17 +25,17 @@ validate_causal_tbl <- function(data, call = parent.frame()) {
                   {.code causal_cols} attribute which is a list.", call=call)
     }
 
-    if (!is.null(cols$outcome)) {
-        if (!is.character(cols$outcome))
-            cli_abort("The `outcome` causal_cols must be stored as a string.", call=call)
-        if (!is.numeric(data[[cols$outcome]]))
-            cli_abort("The `outcome` column must be numeric.", call=call)
+    if (!is.null(cols$outcomes)) {
+        if (!is.character(cols$outcomes))
+            cli_abort("The `outcomes` causal_cols must be stored as a string.", call=call)
+        if (!is.numeric(data[[cols$outcomes]]))
+            cli_abort("The `outcomes` column must be numeric.", call=call)
     }
-    if (!is.null(cols$treatment)) {
-        if (!is.character(cols$treatment))
-            cli_abort("The `treatment` causal_cols must be stored as a string.", call=call)
-        if (!is.numeric(data[[cols$treatment]]))
-            cli_abort("The `treatment` column must be numeric.", call=call)
+    if (!is.null(cols$treatments)) {
+        if (!is.character(cols$treatments))
+            cli_abort("The `treatments` causal_cols must be stored as a string.", call=call)
+        if (!is.numeric(data[[cols$treatments]]))
+            cli_abort("The `treatments` column must be numeric.", call=call)
     }
 
     data
@@ -56,7 +56,7 @@ reconstruct.causal_tbl <- function(data, old) {
     # initialize blank core causal_col if none exists
     if (is.null(causal_cols(data))) {
         if (missing(old)) {
-            causal_cols(data) = list(outcome = NULL, treatment = NULL)
+            causal_cols(data) = list(outcomes = NULL, treatments = NULL)
         } else {
             causal_cols(data) = causal_cols(old)
         }
@@ -86,7 +86,7 @@ reconstruct.causal_tbl <- function(data, old) {
 #' underlying structure of `causal_cols`.
 #'
 #' The `causal_cols` attribute is a named list, with each element corresponding
-#' to a type of causal variable or object: `outcome`, `treatment`, `unit`, but
+#' to a type of causal variable or object: `outcomes`, `treatments`, `panel_unit`, but
 #' also potentially `pscore`, `matches`, `model`, etc.
 #' Each of these elements is a character vector, with each element being a name
 #' of a column in the data frame.
@@ -261,7 +261,7 @@ ctl_new_pillar.causal_tbl <- function(controller, x, width, ..., title = NULL) {
     matched_types = vapply(cols, function(y) match(title, y)[1], 0L)
     marker_type = names(which(!is.na(matched_types)))[1] # first match only
     marker = c(
-        outcome="[out]", treatment="[trt]",
+        outcomes="[out]", treatments="[trt]",
         panel_unit="[unit]", panel_time="[time]"
     )[marker_type]
     marker = if (length(marker) == 0 || is.na(marker)) {

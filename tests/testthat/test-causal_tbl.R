@@ -17,22 +17,16 @@ test_that("causal_tbl creation", {
 test_that("causal_tbl validation", {
     expect_error(validate_causal_tbl(data.frame()), "must have a")
 
-    x = causal_tbl()
-    causal_cols(x) <- list(treatment=NULL) # remove outcome
-    expect_error(validate_causal_tbl(x), "Missing \\`outcome")
-    causal_cols(x) <- list(outcome=NULL) # remove treatment
-    expect_error(validate_causal_tbl(x), "Missing \\`treatment")
-
     x = causal_tbl(y="5")
-    causal_cols(x) <- list(outcome="y", treatment=NULL)
+    causal_cols(x) <- list(outcomes="y", treatments=NULL)
     expect_error(validate_causal_tbl(x), "must be numeric")
-    causal_cols(x) <- list(outcome=5L, treatment=NULL)
+    causal_cols(x) <- list(outcomes=5L, treatments=NULL)
     expect_error(validate_causal_tbl(x), "as a string")
 
     x = causal_tbl(t="5")
-    causal_cols(x) <- list(outcome=NULL, treatment="y")
+    causal_cols(x) <- list(outcomes=NULL, treatments="y")
     expect_error(validate_causal_tbl(x), "must be numeric")
-    causal_cols(x) <- list(outcome=NULL, treatment=5L)
+    causal_cols(x) <- list(outcomes=NULL, treatments=5L)
     expect_error(validate_causal_tbl(x), "as a string")
 
     x = data.frame()

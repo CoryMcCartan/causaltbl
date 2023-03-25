@@ -73,7 +73,6 @@ get_causal_col <- function(data, what) {
 
 
 
-
 #' Define an outcome variable for a `causal_tbl`
 #'
 #' @param data a data frame or `causal_tbl`
@@ -94,10 +93,10 @@ get_causal_col <- function(data, what) {
 set_outcome <- function(data, outcome) {
     data <- as_causal_tbl(data)
     col <- single_col_name(enquo(outcome), data, "outcome")
-    causal_cols(data)$outcome <- col
+    causal_cols(data)$outcomes <- col
     data[[col]] <- vctrs::vec_cast(data[[col]], numeric(), x_arg=col)
     if (has_treatment(data)) {
-        names(causal_cols(data)$treatment)[1] <- col
+        names(causal_cols(data)$treatments)[1] <- col
     }
     data
 }
@@ -106,13 +105,13 @@ set_outcome <- function(data, outcome) {
 #' @return For `get_outcome()` the column name of the outcome variable
 #' @export
 get_outcome <- function(data) {
-    causal_cols(data)$outcome[1]
+    causal_cols(data)$outcomes[1]
 }
 #' @rdname set_outcome
 #' @return For `has_outcome()`, `TRUE` if there is an outcome variable set
 #' @export
 has_outcome <- function(data) {
-    !is.null(causal_cols(data)$outcome)
+    !is.null(causal_cols(data)$outcomes)
 }
 
 
@@ -139,10 +138,10 @@ has_outcome <- function(data) {
 set_treatment <- function(data, treatment, outcome = get_outcome()) {
     data <- as_causal_tbl(data)
     col <- single_col_name(enquo(treatment), data, "treatment")
-    causal_cols(data)$treatment <- col
+    causal_cols(data)$treatments <- col
     data[[col]] <- vctrs::vec_cast(data[[col]], numeric(), x_arg=col)
     if (has_outcome(data)) {
-        names(causal_cols(data)$treatment) <- get_outcome(data)
+        names(causal_cols(data)$treatments) <- get_outcome(data)
     }
     data
 }
@@ -153,13 +152,13 @@ set_treatment <- function(data, treatment, outcome = get_outcome()) {
 #'   outcome column.
 #' @export
 get_treatment <- function(data) {
-    causal_cols(data)$treatment[1]
+    causal_cols(data)$treatments[1]
 }
 #' @rdname set_treatment
 #' @return For `has_treatment()`, `TRUE` if there is a treatment variable set
 #' @export
 has_treatment <- function(data) {
-    !is.null(causal_cols(data)$treatment)
+    !is.null(causal_cols(data)$treatments)
 }
 
 

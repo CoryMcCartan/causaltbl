@@ -58,7 +58,7 @@ developing packages based off of \code{causal_tbl}, it is useful to understand t
 underlying structure of \code{causal_cols}.
 
 The \code{causal_cols} attribute is a named list, with each element corresponding
-to a type of causal variable or object: \code{outcome}, \code{treatment}, \code{unit}, but
+to a type of causal variable or object: \code{outcomes}, \code{treatments}, \code{panel_unit}, but
 also potentially \code{pscore}, \code{matches}, \code{model}, etc.
 Each of these elements is a character vector, with each element being a name
 of a column in the data frame.

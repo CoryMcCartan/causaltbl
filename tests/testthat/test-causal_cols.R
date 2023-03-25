@@ -80,19 +80,19 @@ test_that("lower-level getting and setting", {
         y = c(1, 3, 2, 3, 2, 4, 4, 5)
     )
 
-    x2 <- set_causal_col(x, "treatment", y=trt, id=year)
+    x2 <- set_causal_col(x, "treatments", y=trt, id=year)
     expect_equal(get_treatment(x2), c(y="trt"))
-    expect_length(causal_cols(x2)$treatment, 2)
+    expect_length(causal_cols(x2)$treatments, 2)
 
-    x3 <- add_causal_col(x, "treatment", y=trt)
+    x3 <- add_causal_col(x, "treatments", y=trt)
     expect_equal(get_treatment(x3), c(y="trt"))
-    expect_length(causal_cols(x3)$treatment, 1)
-    expect_error(add_causal_col(x, "treatment", y=trt, y2=trt2), "more than one")
+    expect_length(causal_cols(x3)$treatments, 1)
+    expect_error(add_causal_col(x, "treatments", y=trt, y2=trt2), "more than one")
 
-    x3 <- set_causal_col(x3, "treatment", id=year)
+    x3 <- set_causal_col(x3, "treatments", id=year)
     expect_equal(get_treatment(x3), c(id="year"))
-    expect_length(causal_cols(x3)$treatment, 1)
-    expect_error(set_causal_col(x3, "treatment"), "Must select")
+    expect_length(causal_cols(x3)$treatments, 1)
+    expect_error(set_causal_col(x3, "treatments"), "Must select")
 
     x4 <- add_causal_col(x, "pscore", trt=id, ptype=factor())
     expect_type(causal_cols(x4)$pscore, "character")
