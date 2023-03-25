@@ -73,7 +73,7 @@ reconstruct.causal_tbl <- function(data, old) {
 #' Build a causal data frame
 #'
 #' A `causal_tbl` is a tibble with additional attribute information stored
-#' in `causal_cols`.  See the 'Internal structure' for more on the structure of this
+#' in [causal_cols].  See the 'Internal structure' for more on the structure of this
 #' attribute.
 #'
 #' At its core, a `causal_tbl` is just a tibble, and it should behave like
@@ -84,7 +84,7 @@ reconstruct.causal_tbl <- function(data, old) {
 #' in this package, like [get_outcome()] and [set_outcome()].
 #'
 #' # Internal structure
-#' The `causal_cols` attribute is considered mostly internal, and end users
+#' The [causal_cols] attribute is considered mostly internal, and end users
 #' do not have to worry about its internal structure. However, for those
 #' developing packages based off of `causal_tbl`, it is useful to understand the
 #' underlying structure of `causal_cols`.

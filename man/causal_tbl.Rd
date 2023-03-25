@@ -28,7 +28,7 @@ A \code{causal_tbl} object
 }
 \description{
 A \code{causal_tbl} is a tibble with additional attribute information stored
-in \code{causal_cols}.  See the 'Internal structure' for more on the structure of this
+in \link{causal_cols}.  See the 'Internal structure' for more on the structure of this
 attribute.
 }
 \details{
@@ -47,7 +47,7 @@ in this package, like \code{\link[=get_outcome]{get_outcome()}} and \code{\link[
 
 }}
 \section{Internal structure}{
-The \code{causal_cols} attribute is considered mostly internal, and end users
+The \link{causal_cols} attribute is considered mostly internal, and end users
 do not have to worry about its internal structure. However, for those
 developing packages based off of \code{causal_tbl}, it is useful to understand the
 underlying structure of \code{causal_cols}.
