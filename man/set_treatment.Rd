@@ -6,7 +6,7 @@
 \alias{has_treatment}
 \title{Define a treatment variable for a \code{causal_tbl}}
 \usage{
-set_treatment(data, treatment)
+set_treatment(data, treatment, outcome = get_outcome())
 
 get_treatment(data)
 
@@ -17,6 +17,9 @@ has_treatment(data)
 
 \item{treatment}{the column containing the treatment variable (tidy-selected).
 Must be numeric or coercible to numeric.}
+
+\item{outcome}{the column containing the corresponding outcome variable (tidy-selected).
+Default is \code{get_outcome()}}
 }
 \value{
 A \code{causal_tbl}

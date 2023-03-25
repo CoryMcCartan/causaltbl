@@ -53,6 +53,8 @@ has_outcome <- function(data) {
 #' @param data a data frame or `causal_tbl`
 #' @param treatment the column containing the treatment variable (tidy-selected).
 #'    Must be numeric or coercible to numeric.
+#' @param outcome the column containing the corresponding outcome variable (tidy-selected).
+#'   Default is `get_outcome()`
 #'
 #' @return A `causal_tbl`
 #' @export
@@ -65,7 +67,7 @@ has_outcome <- function(data) {
 #'   set_treatment(milk_first)
 #' print(data) # a causal_tbl
 #' get_treatment(data)
-set_treatment <- function(data, treatment) {
+set_treatment <- function(data, treatment, outcome = get_outcome()) {
     data <- as_causal_tbl(data)
     col <- single_col_name(enquo(treatment), data, "treatment")
     causal_cols(data)$treatment <- col
@@ -132,6 +134,44 @@ get_panel <- function(data) {
 has_panel <- function(data) {
     !is.null(causal_cols(data)$panel_unit) &&
         !is.null(causal_cols(data)$panel_time)
+}
+
+
+#' Define Custom Causal Attributes
+#'
+#' @param data a data frame or `causal_tbl`
+#' @param ... named attributes to add to `data`'s causal attributes
+#'
+#' @return A `causal_tbl`
+#' @export
+#'
+#' @examples
+#' data <- data.frame(
+#'   milk_first = c(0, 1, 0, 1, 1, 0, 0, 1),
+#'   guess = c(0, 1, 0, 1, 1, 0, 0, 1)
+#' ) |>
+#'   set_causal_col(milk_first, "treatment")
+#' print(data) # a causal_tbl
+#' get_causal_col(data, "treatment")
+set_causal_col <- function(data, ...) {
+    data <- as_causal_tbl(data)
+
+    data
+}
+
+#' @rdname set_causal_col
+#' @return For `get_causal_col()` the column name of the requested variable
+#' @param what the causal attribute to get
+#' @export
+get_causal_col <- function(data, what) {
+
+}
+
+#' @rdname set_causal_col
+#' @return For `add_causal_col()` A `causal_tbl`
+#' @export
+add_causal_col <- function(data, ...) {
+
 }
 
 
