@@ -25,10 +25,6 @@ validate_causal_tbl <- function(data, call = parent.frame()) {
                   {.code causal_cols} attribute which is a list.", call=call)
     }
 
-    if (!"outcome" %in% names(cols))
-        cli_abort("Missing `outcome` in causal_cols", call=call)
-    if (!"treatment" %in% names(cols))
-        cli_abort("Missing `treatment` in causal_cols", call=call)
     if (!is.null(cols$outcome)) {
         if (!is.character(cols$outcome))
             cli_abort("The `outcome` causal_cols must be stored as a string.", call=call)
@@ -190,10 +186,7 @@ assert_df <- function(data, arg) {
         new_col = cols[[col]][keep]
         # handle subsetting
         if (length(new_col) == 0) { # causal_col removed (set to NULL)
-            new_col = list(NULL)
-            names(new_col) = col
-            causal_cols(out)[col] = new_col
-            next
+            new_col = NULL
         } else if (!is.null(names(new_col))) {
             nms <- new_names[match(names(new_col), new_names)]
             if (all(is.na(nms))) {
