@@ -1,9 +1,9 @@
-# indices printing
+# causal_idx printing
 
     Code
       print(idx)
     Output
-      <indices[3]>
+      <causal_idx[3]>
       [1] (2)   (1,3) (2)  
 
 ---
