@@ -4,6 +4,7 @@
 \alias{new_causal_tbl}
 \alias{causal_tbl}
 \alias{as_causal_tbl}
+\alias{is_causal_tbl}
 \title{Build a causal data frame}
 \usage{
 new_causal_tbl(..., .outcome = NULL, .treatment = NULL)
@@ -11,6 +12,8 @@ new_causal_tbl(..., .outcome = NULL, .treatment = NULL)
 causal_tbl(..., .outcome = NULL, .treatment = NULL)
 
 as_causal_tbl(x)
+
+is_causal_tbl(x)
 }
 \arguments{
 \item{...}{passed on to \code{\link[=tibble]{tibble()}}}
@@ -21,7 +24,7 @@ Can be set later with \code{\link[=set_outcome]{set_outcome()}}.}
 \item{.treatment}{the column containing the treatment variable (tidy-selected).
 Can be set later with \code{\link[=set_treatment]{set_treatment()}}.}
 
-\item{x}{A data frame to be coerced}
+\item{x}{A data frame to be checked or coerced}
 }
 \value{
 A \code{causal_tbl} object
@@ -44,6 +47,8 @@ in this package, like \code{\link[=get_outcome]{get_outcome()}} and \code{\link[
 \item \code{new_causal_tbl()}: Construct a \code{causal_tbl} with no checks
 
 \item \code{as_causal_tbl()}: Coerce a data frame to a \code{causal_tbl}
+
+\item \code{is_causal_tbl()}: Return \code{TRUE} if a data frame is a \code{causal_tbl}
 
 }}
 \section{Internal structure}{
@@ -78,9 +83,11 @@ that a \code{causal_tbl} has the necessary columns set via helpers like
 }
 
 \examples{
-causal_tbl(
+data <- causal_tbl(
   milk_first = c(0, 1, 0, 1, 1, 0, 0, 1),
   guess = c(0, 1, 0, 1, 1, 0, 0, 1)
 )
+is_causal_tbl(data)
+print(data)
 
 }

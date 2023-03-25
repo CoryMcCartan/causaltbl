@@ -231,6 +231,10 @@ multi_col_name <- function(expr, data, arg) {
         cli_abort("Must select a column for {.arg {arg}}", call=parent.frame())
     }
     out <- names(data)[idx]
-    names(out) = names(idx)
+    nms <- names(idx)
+    if (!all(nms == out)) {
+        nms[nms == out] = ""
+        names(out) <- nms
+    }
     out
 }

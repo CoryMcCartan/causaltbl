@@ -122,10 +122,12 @@ reconstruct.causal_tbl <- function(data, old) {
 #' @return A `causal_tbl` object
 #'
 #' @examples
-#' causal_tbl(
+#' data <- causal_tbl(
 #'   milk_first = c(0, 1, 0, 1, 1, 0, 0, 1),
 #'   guess = c(0, 1, 0, 1, 1, 0, 0, 1)
 #' )
+#' is_causal_tbl(data)
+#' print(data)
 #'
 #' @export
 causal_tbl <- function(..., .outcome=NULL, .treatment=NULL) {
@@ -142,10 +144,10 @@ causal_tbl <- function(..., .outcome=NULL, .treatment=NULL) {
 
 
 #' @describeIn causal_tbl Coerce a data frame to a `causal_tbl`
-#' @param x A data frame to be coerced
+#' @param x A data frame to be checked or coerced
 #' @export
 as_causal_tbl <- function(x) {
-    if (inherits(x, "causal_tbl")) {
+    if (is_causal_tbl(x)) {
         x
     } else if (is.data.frame(x)) {
         reconstruct.causal_tbl(x)
@@ -154,8 +156,14 @@ as_causal_tbl <- function(x) {
     }
 }
 
+#' @describeIn causal_tbl Return `TRUE` if a data frame is a `causal_tbl`
+#' @export
+is_causal_tbl <- function(x) {
+    inherits(x, "causal_tbl")
+}
+
 assert_causal_tbl <- function(data, arg) {
-    if (!inherits(data, "causal_tbl")) {
+    if (!is_causal_tbl(data)) {
         cli_abort("{.arg {deparse(substitute(data))}} must be a {.cls causal_tbl}.",
                   call=parent.frame())
     }
