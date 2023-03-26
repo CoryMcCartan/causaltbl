@@ -45,6 +45,11 @@ fitted values. The original model object is stored in the \code{"model"}
 attribute, which can be accessed with \code{\link[=get_model_fit]{get_model_fit()}}. The \code{idx} indices
 (which may have been computed automatically) are stored in the \code{"idx"}
 attribute, which can be accessed with \code{\link[=get_model_idx]{get_model_idx()}}.
+
+A \code{causal_mod} object additionally supports forwarding generic model
+functions. So if you call \code{fitted()}, \code{predict()}, etc. on a \code{causal_mod},
+object, you will get the same result as if you had called these functions on
+the original model object.
 }
 \section{Functions}{
 \itemize{

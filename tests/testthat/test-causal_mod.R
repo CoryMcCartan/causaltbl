@@ -26,6 +26,17 @@ test_that("causal_mod conversion", {
     expect_type(c(double(), x), "double")
 })
 
+test_that("causal_mod getters", {
+    m <- lm(yield ~ block + N, data=npk)
+    x <- causal_mod(m)
+
+    expect_identical(get_model_fit(x), m)
+    expect_equal(get_model_idx(x), seq_len(nrow(npk)))
+
+    expect_error(get_model_fit(5), "causal_mod")
+    expect_error(get_model_idx(5), "causal_mod")
+})
+
 test_that("causal_mod slicing", {
     m <- lm(yield ~ block + N, data=npk)
     x <- causal_mod(m)
@@ -35,8 +46,24 @@ test_that("causal_mod slicing", {
 })
 
 
+test_that("causal_mod generics", {
+    m <- lm(yield ~ block + N, data=npk)
+    x <- causal_mod(m)
+
+    expect_identical(fitted(x), fitted(m))
+    expect_identical(resid(x), residuals(m))
+    expect_identical(predict(x), predict(m))
+    expect_identical(simulate(x, seed=5118), simulate(m, seed=5118))
+    expect_identical(summary(x), summary(m))
+    expect_identical(nobs(x), nobs(m))
+    expect_identical(vcov(x), vcov(m))
+    expect_identical(logLik(x), logLik(m))
+    expect_identical(confint(x, "block2"), confint(m, "block2"))
+    expect_identical(formula(x), formula(m))
+})
+
+
 test_that("causal_mod printing", {
-    skip_on_ci()
     skip_on_cran()
 
     m <- lm(yield ~ block + N, data=npk)

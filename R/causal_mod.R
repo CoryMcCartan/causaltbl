@@ -21,6 +21,11 @@ new_causal_mod <- function(x = list(), fitted = double(0), idx = seq_along(fitte
 #' (which may have been computed automatically) are stored in the `"idx"`
 #' attribute, which can be accessed with [get_model_idx()].
 #'
+#' A `causal_mod` object additionally supports forwarding generic model
+#' functions. So if you call `fitted()`, `predict()`, etc. on a `causal_mod`,
+#' object, you will get the same result as if you had called these functions on
+#' the original model object.
+#'
 #' @param x
 #' * For `causal_mod()` and `new_causal_mod()`: A fitted model object.
 #'   For `causal_mod()` this should support the [fitted()] generic.
@@ -156,8 +161,67 @@ vec_cast.double.causal_mod <- function(x, to, ...) vctrs::vec_data(x)
 
 # model generics -------------------------------------------------------------------
 
+#' @importFrom stats fitted
+#' @export
+fitted.causal_mod <- function(object, ...) {
+    fitted(get_model_fit(object), ...)
+}
+#' @importFrom stats residuals
+#' @export
+residuals.causal_mod <- function(object, ...) {
+    residuals(get_model_fit(object), ...)
+}
+#' @importFrom stats predict
+#' @export
+predict.causal_mod <- function(object, ...) {
+    predict(get_model_fit(object), ...)
+}
+#' @importFrom stats simulate
+#' @export
+simulate.causal_mod <- function(object, nsim = 1, seed = NULL, ...) {
+    simulate(get_model_fit(object), nsim=nsim, seed=seed, ...)
+}
+
+#' @export
+summary.causal_mod <- function(object, ...) {
+    summary(get_model_fit(object), ...)
+}
+#' @importFrom stats vcov
+#' @export
+vcov.causal_mod <- function(object, ...) {
+    vcov(get_model_fit(object), ...)
+}
+#' @importFrom stats nobs
+#' @export
+nobs.causal_mod <- function(object, ...) {
+    nobs(get_model_fit(object), ...)
+}
+#' @importFrom stats logLik
+#' @export
+logLik.causal_mod <- function(object, ...) {
+    logLik(get_model_fit(object), ...)
+}
 #' @importFrom stats confint
 #' @export
 confint.causal_mod <- function(object, parm, level=0.95, ...) {
-    NextMethod(object=get_model_fit(object))
+    confint(get_model_fit(object), parm=parm, level=level, ...)
 }
+#' @importFrom stats formula
+#' @export
+formula.causal_mod <- function(x,  ...) {
+    formula(get_model_fit(x), ...)
+}
+
+# don't want to Suggest broom for now
+# nocov start
+#' @importFrom generics tidy
+#' @export
+tidy.causal_mod <- function(x,  ...) {
+    tidy(get_model_fit(x), ...)
+}
+#' @importFrom generics glance
+#' @export
+glance.causal_mod <- function(x,  ...) {
+    glance(get_model_fit(x), ...)
+}
+# nocov end

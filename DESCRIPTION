@@ -15,6 +15,7 @@ Imports:
     vctrs,
     pillar,
     stats,
+    generics,
     lifecycle
 Suggests: 
     tibble,

@@ -33,7 +33,7 @@ outcome column.
 
 For \code{has_treatment()}, \code{TRUE} if there is a treatment variable set
 
-For \code{pull_treatment()} the vector of the treatment variable.
+For \code{pull_treatment()}, the vector of the treatment variable.
 }
 \description{
 Define a treatment variable for a \code{causal_tbl}

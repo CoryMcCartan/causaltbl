@@ -28,7 +28,7 @@ For \code{get_outcome()} the column name of the outcome variable
 
 For \code{has_outcome()}, \code{TRUE} if there is an outcome variable set
 
-For \code{pull_outcome()} the vector of the outcome variable.
+For \code{pull_outcome()}, the vector of the outcome variable.
 }
 \description{
 Define an outcome variable for a \code{causal_tbl}

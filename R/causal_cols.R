@@ -116,11 +116,11 @@ has_outcome <- function(data) {
     !is.null(causal_cols(data)$outcomes)
 }
 #' @rdname set_outcome
-#' @return For `pull_outcome()` the vector of the outcome variable.
+#' @return For `pull_outcome()`, the vector of the outcome variable.
 #' @export
 pull_outcome <- function(data) {
     if (!has_outcome(data)) {
-        cli::cli_abort("No outcome is set in {.arg data}.")
+        cli::cli_abort("No outcome is set in {.arg data}.", call=parent.frame())
     }
     data[[get_outcome(data)]]
 }
@@ -174,11 +174,11 @@ has_treatment <- function(data) {
     !is.null(causal_cols(data)$treatments)
 }
 #' @rdname set_treatment
-#' @return For `pull_treatment()` the vector of the treatment variable.
+#' @return For `pull_treatment()`, the vector of the treatment variable.
 #' @export
 pull_treatment <- function(data) {
     if (!has_treatment(data)) {
-        cli::cli_abort("No treatment is set in {.arg data}.")
+        cli::cli_abort("No treatment is set in {.arg data}.", call=parent.frame())
     }
     data[[get_treatment(data)]]
 }

@@ -29,7 +29,6 @@ test_that("causal_idx slicing", {
 
 
 test_that("causal_idx printing", {
-    skip_on_ci()
     skip_on_cran()
 
     idx <- causal_idx(list(2, c(1, NA, 3), 2))
