@@ -1,8 +1,9 @@
 pandoc: 2.19.2
 pkgdown: 2.0.7
 pkgdown_sha: ~
-articles: {}
-last_built: 2023-03-26T00:59Z
+articles:
+  advanced: advanced.html
+last_built: 2023-03-26T02:20Z
 urls:
   reference: http://corymccartan.com/causaltbl/reference
   article: http://corymccartan.com/causaltbl/articles
