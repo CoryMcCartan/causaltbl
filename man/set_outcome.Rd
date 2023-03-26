@@ -4,6 +4,7 @@
 \alias{set_outcome}
 \alias{get_outcome}
 \alias{has_outcome}
+\alias{pull_outcome}
 \title{Define an outcome variable for a \code{causal_tbl}}
 \usage{
 set_outcome(data, outcome)
@@ -11,6 +12,8 @@ set_outcome(data, outcome)
 get_outcome(data)
 
 has_outcome(data)
+
+pull_outcome(data)
 }
 \arguments{
 \item{data}{a data frame or \code{causal_tbl}}
@@ -24,6 +27,8 @@ A \code{causal_tbl}
 For \code{get_outcome()} the column name of the outcome variable
 
 For \code{has_outcome()}, \code{TRUE} if there is an outcome variable set
+
+For \code{pull_outcome()} the vector of the outcome variable.
 }
 \description{
 Define an outcome variable for a \code{causal_tbl}
