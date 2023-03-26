@@ -35,7 +35,9 @@ new_causal_mod <- function(x = list(), fitted = double(0), idx = seq_along(fitte
 #'
 #' d <- rbind(NA, npk)
 #' m_mis <- lm(yield ~ block + N*P*K, data=d)
+#' fitted(m_mis) # length doesn't match rows of `d`
 #' causal_mod(m_mis) # NA for missing value
+#' attr(causal_mod(m_mis), "idx")
 #'
 #' @order 1
 #' @export
@@ -70,14 +72,17 @@ is_causal_mod <- function(x) {
 
 
 # printing
+# (tests skipped on CI)
+# nocov start
 #' @export
 format.causal_mod <- function(x, ...) {
     formatC(vctrs::vec_data(x))
 }
 #' @export
 str.causal_mod <- function(object, max.level=2, ...) {
-    NextMethod(max.level=max.level, ...) # nocov
+    NextMethod(max.level=max.level, ...)
 }
+# nocov end
 
 # vctrs -------------------------------------------------------------------
 

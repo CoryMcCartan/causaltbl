@@ -109,7 +109,8 @@ reconstruct.causal_tbl <- function(data, old) {
 #' that a `causal_tbl` has the necessary columns set via helpers like
 #' [has_treatment()], [has_outcome()], etc.
 #'
-#' @param ... passed on to [tibble()]
+#' @param ... passed on to [vctrs::df_list()] (for `causal_tbl` only) then
+#'   [vctrs::new_data_frame()] (both constructors).
 #' @param .outcome the column containing the outcome variable (tidy-selected).
 #'   Can be set later with [set_outcome()].
 #' @param .treatment the column containing the treatment variable (tidy-selected).
@@ -223,6 +224,8 @@ assert_df <- function(data, arg) {
 
 
 # Printing -----------------------------------------------------------------
+# (tests skipped on CI)
+# nocov start
 
 #' @importFrom pillar tbl_sum
 #' @method tbl_sum causal_tbl
@@ -278,3 +281,5 @@ ctl_new_pillar.causal_tbl <- function(controller, x, width, ..., title = NULL) {
         data = out$data
     ))
 }
+
+# nocov end

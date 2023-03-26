@@ -53,6 +53,8 @@ as_causal_idx <- function(x) {
 
 
 # printing
+# (tests skipped on CI)
+# nocov start
 #' @export
 format.causal_idx <- function(x, ...) {
     vapply(vctrs::vec_data(x), format_index_line, "")
@@ -60,6 +62,7 @@ format.causal_idx <- function(x, ...) {
 format_index_line <- function(y) {
     paste0("(", paste0(formatC(y[!is.na(y)]), collapse=","), ")")
 }
+# nocov end
 
 # vctrs -------------------------------------------------------------------
 

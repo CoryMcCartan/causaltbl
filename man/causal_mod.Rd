@@ -49,6 +49,8 @@ causal_mod(m)
 
 d <- rbind(NA, npk)
 m_mis <- lm(yield ~ block + N*P*K, data=d)
+fitted(m_mis) # length doesn't match rows of `d`
 causal_mod(m_mis) # NA for missing value
+attr(causal_mod(m_mis), "idx")
 
 }

@@ -16,7 +16,8 @@ as_causal_tbl(x)
 is_causal_tbl(x)
 }
 \arguments{
-\item{...}{passed on to \code{\link[=tibble]{tibble()}}}
+\item{...}{passed on to \code{\link[vctrs:df_list]{vctrs::df_list()}} (for \code{causal_tbl} only) then
+\code{\link[vctrs:new_data_frame]{vctrs::new_data_frame()}} (both constructors).}
 
 \item{.outcome}{the column containing the outcome variable (tidy-selected).
 Can be set later with \code{\link[=set_outcome]{set_outcome()}}.}

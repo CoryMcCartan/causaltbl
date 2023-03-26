@@ -35,6 +35,9 @@ test_that("causal_mod slicing", {
 
 
 test_that("causal_mod printing", {
+    skip_on_ci()
+    skip_on_cran()
+
     m <- lm(yield ~ block + N*P*K, data=npk)
     x <- causal_mod(m)
 

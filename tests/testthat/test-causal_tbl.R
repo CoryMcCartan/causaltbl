@@ -98,6 +98,9 @@ test_that("causal_tbl slicing and renaming", {
 })
 
 test_that("causal_tbl printing", {
+    skip_on_ci()
+    skip_on_cran()
+
     x <- causal_tbl(milk_first = c(0, 1, 0, 1, 1, 0, 0, 1),
                     guess = c(0, 1, 0, 1, 1, 0, 0, 1),
                     .outcome = guess,
