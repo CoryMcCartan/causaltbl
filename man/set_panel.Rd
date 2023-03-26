@@ -35,7 +35,7 @@ For \code{has_panel()}, \code{TRUE} if there is panel data structure
 For \code{pull_panel_unit()} and \code{pull_panel_time()} the vector of the panel variable.
 }
 \description{
-Define a panel data structure for a \code{causal_tbl}
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 }
 \examples{
 data <- data.frame(

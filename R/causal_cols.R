@@ -187,6 +187,8 @@ pull_treatment <- function(data) {
 
 #' Define a panel data structure for a `causal_tbl`
 #'
+#' `r lifecycle::badge('experimental')`
+#'
 #' @param data a data frame or `causal_tbl`
 #' @param unit the column indexing treatment units (tidy-selected)
 #' @param time the column indexing treatment time (tidy-selected)
