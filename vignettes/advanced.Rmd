@@ -1,0 +1,71 @@
+---
+title: "Advanced `causal_tbl`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Advanced `causal_tbl`}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This vignette provides more specific details of how `causal_tbl` objects work and how to extend them. Most users won't need to know much about `causal_tbl`s except that they're (1) extensions of `tibble`s and (2) they rely on a `causal_cols` attribute that makes things "just work". The `causal_cols` are the columns for different causal variables that play an important role. The package provides various getter and setter functions for these.
+
+This vignette covers:
+1. How `causal_cols` works internally.
+2. How to extend the type if your model needs shiny new causal variables.
+
+```{r setup}
+library(causaltbl)
+```
+
+## Internal Design of `causal_tbl`
+
+Like in the README, here we use a simple difference-in-differences example: 8 observations for 2 units, across 4 years.
+
+```{r}
+df <- data.frame(
+  id = c("a", "a", "a", "a", "b", "b", "b", "b"),
+  year = rep(2015:2018, 2),
+  trt = c(0, 0, 0, 0, 0, 0, 1, 1),
+  y = c(1, 3, 2, 3, 2, 4, 4, 5)
+)
+```
+
+Here, when we create the `causal_tbl`, we can specify the outcome and treatment directly via `.outcome` and `.treatment`.
+```{r}
+did <- causal_tbl(df, .outcome = y, .treatment = trt)
+```
+
+All causal attributes can be recovered with `causal_cols()`:
+
+```{r}
+causal_cols(did)
+```
+
+Each of these elements is a character vector, with each element being a name of a column in the data frame. For some variables, this vector should be of length 1, but for other variables, there may be multiple columns of that type. 
+
+In our case, the `causal_cols()` are the `outcome` and `treatment`. The outcome has no name, i.e., it's just `"y"`. The treatments entry indicates that `trt` automatically corresponds to `"y"` as the outcome related to this treatment. This is indicated by the name.
+
+The optional `names()` of the columns within a particular element of `causal_cols` convey information on any associated variable. For example, the treatment variable is by default associated with a particular outcome. And a propensity score or outcome model is associated with a particular treatment or outcome variable.
+
+However, you are not limited to one treatment or one outcome. For example, if a package author was developing methods for causal inference with multiple continuous treatments, the treatment element of `causal_cols` could have an entry for each `treatment` column.
+
+Once set, these column names within `causal_cols` are automatically updated if columns are renamed, or set to `NULL` if columns are dropped. This reassignment happens automatically and silently in all cases.
+
+## Extending `causal_tbl` with new `causal_cols`
+
+Now, if you need something fancy, odds are should implement a new attribute for `causal_cols`. As we saw before, `causal_cols` attributes can be gotten via `causal_cols()`. They can be set using `causal_cols() <- ...`.
+
+Each new entry to `causal_cols` should be a named list, where:
+
+- the name of the list denotes, in short form, what the thing is (i.e. if they're propensity scores, the name should be `pscores`)
+- each entry in the list denotes one of those things
+- each name of each entry indicates what that entry corresponds to
+
+It is the responsibility of implementers of particular methods to check that a causal_tbl has the necessary columns set via helpers like `has_treatment()`, `has_outcome()`, etc.

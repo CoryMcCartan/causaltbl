@@ -17,6 +17,8 @@ Imports:
     pillar
 Suggests: 
     dplyr,
+    knitr,
+    rmarkdown,
     testthat (>= 3.0.0)
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -26,3 +28,4 @@ Config/testthat/edition: 3
 URL: https://github.com/CoryMcCartan/causaltbl,
     http://corymccartan.com/causaltbl/
 BugReports: https://github.com/CoryMcCartan/causaltbl/issues
+VignetteBuilder: knitr
