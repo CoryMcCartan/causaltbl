@@ -46,7 +46,9 @@ add_causal_col <- function(data, what, ..., ptype=NULL) {
     data <- as_causal_tbl(data)
     dots <- enquos(...)
     if (length(dots) > 1) {
-        cli_abort("Use {.fn set_causal_col} to add more than one column at a time")
+        cli_abort(c("Only one column can be added at a time.",
+                    ">"="Use {.fn set_causal_col} to add more than one column."),
+                  call=parent.frame())
     }
 
     col <- single_col_name(dots[[1]], data, what)
@@ -120,7 +122,9 @@ has_outcome <- function(data) {
 #' @export
 pull_outcome <- function(data) {
     if (!has_outcome(data)) {
-        cli::cli_abort("No outcome is set in {.arg data}.", call=parent.frame())
+        cli::cli_abort(c("No outcome is set in {.arg data}.",
+                         ">"="Use {.fn set_outcome} set an outcome variable."),
+                       call=parent.frame())
     }
     data[[get_outcome(data)]]
 }
@@ -178,7 +182,9 @@ has_treatment <- function(data) {
 #' @export
 pull_treatment <- function(data) {
     if (!has_treatment(data)) {
-        cli::cli_abort("No treatment is set in {.arg data}.", call=parent.frame())
+        cli::cli_abort(c("No treatment is set in {.arg data}.",
+                         ">"="Use {.fn set_treatment} set an treatment variable."),
+                       call=parent.frame())
     }
     data[[get_treatment(data)]]
 }
@@ -233,11 +239,14 @@ has_panel <- function(data) {
         !is.null(causal_cols(data)$panel_time)
 }
 #' @rdname set_panel
-#' @return For `pull_panel_unit()` and `pull_panel_time()` the vector of the panel variable.
+#' @return For `pull_panel_unit()` and `pull_panel_time()`, the vector of the
+#'   corresponding panel variable.
 #' @export
 pull_panel_unit <- function(data) {
     if (!has_panel(data)) {
-        cli::cli_abort("No panel is set in {.arg data}.")
+        cli::cli_abort(c("No panel structure exists for {.arg data}.",
+                         ">"="Use {.fn set_panel} to set up panel data structure."),
+                       call=parent.frame())
     }
     data[[get_panel(data)$unit]]
 }
@@ -245,7 +254,9 @@ pull_panel_unit <- function(data) {
 #' @export
 pull_panel_time <- function(data) {
     if (!has_panel(data)) {
-        cli::cli_abort("No panel is set in {.arg data}.")
+        cli::cli_abort(c("No panel structure exists for {.arg data}.",
+                         ">"="Use {.fn set_panel} to set up panel data structure."),
+                       call=parent.frame())
     }
     data[[get_panel(data)$time]]
 }

@@ -32,7 +32,8 @@ For \code{get_panel()} a list with the column names of the unit and time variabl
 
 For \code{has_panel()}, \code{TRUE} if there is panel data structure
 
-For \code{pull_panel_unit()} and \code{pull_panel_time()} the vector of the panel variable.
+For \code{pull_panel_unit()} and \code{pull_panel_time()}, the vector of the
+corresponding panel variable.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
