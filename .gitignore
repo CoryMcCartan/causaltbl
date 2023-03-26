@@ -10,3 +10,4 @@ pkgdown
 *.tmp
 *.bak
 *.swp
+inst/doc
