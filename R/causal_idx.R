@@ -19,11 +19,11 @@ new_causal_idx <- function(x = list()) {
 #' (because of subsetting) are set to NA.
 #'
 #' @param x
-#' * For `causal_idx()` and `new_causal_idx()`: A list of indices of type `causal_idx`
+#' * For `causal_idx()` and `new_causal_idx()`: A list of indices
 #' * For `is_causal_idx()`: An object to test
 #' * For `as_causal_idx()`: An object to coerce
 #'
-#' @returns A `causal_idx` object.
+#' @returns A `causal_idx` object. For `is_causal_idx()`, a logical value.
 #'
 #' @examples
 #' idx <- causal_idx(list(2, c(1, NA, 3), 2))
@@ -82,7 +82,7 @@ vec_ptype_abbr.causal_idx <- function(x, ...) {
 
 #' @importFrom vctrs vec_ptype2
 #' @export
-vec_ptype2.list.causal_idx <- function(x, y, ...) list()
+vec_ptype2.list.causal_idx <- function(x, y, ...) list() # nocov
 #' @export
 vec_ptype2.causal_idx.list <- function(x, y, ...) list()
 #' @importFrom vctrs vec_cast

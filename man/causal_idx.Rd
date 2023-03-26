@@ -17,13 +17,13 @@ as_causal_idx(x)
 }
 \arguments{
 \item{x}{\itemize{
-\item For \code{causal_idx()} and \code{new_causal_idx()}: A list of indices of type \code{causal_idx}
+\item For \code{causal_idx()} and \code{new_causal_idx()}: A list of indices
 \item For \code{is_causal_idx()}: An object to test
 \item For \code{as_causal_idx()}: An object to coerce
 }}
 }
 \value{
-A \code{causal_idx} object.
+A \code{causal_idx} object. For \code{is_causal_idx()}, a logical value.
 }
 \description{
 A \code{causal_idx} list is a list with integer vector entries which represent

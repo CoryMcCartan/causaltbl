@@ -94,7 +94,9 @@ set_outcome <- function(data, outcome) {
     data <- as_causal_tbl(data)
     col <- single_col_name(enquo(outcome), data, "outcome")
     causal_cols(data)$outcomes <- col
+    # coerce
     data[[col]] <- vctrs::vec_cast(data[[col]], numeric(), x_arg=col)
+    # handle names
     if (has_treatment(data)) {
         names(causal_cols(data)$treatments)[1] <- col
     }
@@ -139,7 +141,9 @@ set_treatment <- function(data, treatment, outcome = get_outcome()) {
     data <- as_causal_tbl(data)
     col <- single_col_name(enquo(treatment), data, "treatment")
     causal_cols(data)$treatments <- col
+    # coerce
     data[[col]] <- vctrs::vec_cast(data[[col]], numeric(), x_arg=col)
+    # handle names
     if (has_outcome(data)) {
         names(causal_cols(data)$treatments) <- get_outcome(data)
     }
