@@ -9,6 +9,7 @@ test_that("causal_mod constructor", {
     expect_error(causal_mod(5), "atomic")
     expect_error(new_causal_mod(5), "atomic")
     expect_error(causal_mod(list()), "fitted()")
+    expect_error(causal_mod(list(fitted="a")), "numeric")
 
     d = rbind(NA, npk, NA, npk)
     m <- lm(yield ~ block + N*P*K, data=d)

@@ -15,6 +15,12 @@ new_causal_mod <- function(x = list(), fitted = double(0), idx = seq_along(fitte
 #' stores the fitted model for later predictions and summaries, and keeps track
 #' of observations that have been dropped (e.g. due to missingness) or subsetted.
 #'
+#' A `causal_mod` object can be treated and will behave as a numeric vector of
+#' fitted values. The original model object is stored in the `"model"`
+#' attribute, which can be accessed with [get_model_fit()]. The `idx` indices
+#' (which may have been computed automatically) are stored in the `"idx"`
+#' attribute, which can be accessed with [get_model_idx()].
+#'
 #' @param x
 #' * For `causal_mod()` and `new_causal_mod()`: A fitted model object.
 #'   For `causal_mod()` this should support the [fitted()] generic.
@@ -27,7 +33,9 @@ new_causal_mod <- function(x = list(), fitted = double(0), idx = seq_along(fitte
 #' @param fitted A vector of fitted values.  Extracted automatically from the
 #'   model object in `causal_mod()`.
 #'
-#' @returns A `causal_mod` object. For `is_causal_mod()`, a logical value.
+#' @returns
+#'  * For `causal_mod()` and `new_causal_mod()`: A `causal_mod` object.
+#'  * For `is_causal_mod()`, a logical value.
 #'
 #' @examples
 #' m <- lm(yield ~ block + N*P*K, data=npk)
@@ -38,6 +46,7 @@ new_causal_mod <- function(x = list(), fitted = double(0), idx = seq_along(fitte
 #' fitted(m_mis) # length doesn't match rows of `d`
 #' causal_mod(m_mis) # NA for missing value
 #' attr(causal_mod(m_mis), "idx")
+#' attr(causal_mod(m_mis), "mod")
 #'
 #' @order 1
 #' @export
@@ -49,6 +58,9 @@ causal_mod <- function(x, idx = NULL) {
     fitted <- stats::fitted(x)
     if (is.null(fitted)) {
         cli_abort("{.arg x} does not have a {.fn fitted} method.")
+    }
+    if (!is.numeric(fitted)) {
+        cli_abort("Fitted values for {.arg x} must be numeric.")
     }
     if (is.null(idx)) {
         nas <- stats::na.action(x)
@@ -64,10 +76,42 @@ causal_mod <- function(x, idx = NULL) {
     new_causal_mod(x, fitted, idx)
 }
 
-#' @describeIn causal_mod Return `TRUE` if an object is an `causal_mod` list
+#' @describeIn causal_mod Return `TRUE` if an object is a `causal_mod`
 #' @export
 is_causal_mod <- function(x) {
     inherits(x, "causal_mod")
+}
+
+
+#' Extract the model object and observation indices from a `causal_mod`
+#'
+#' @param x The `causal_mod` object
+#'
+#' @returns
+#' * For `get_model_fit()`: A fitted model object
+#' * For `get_model_idx()`: An integer vector of indices
+#'
+#' @examples
+#' m <- lm(yield ~ block + N*P*K, data=npk)
+#' x <- causal_mod(m)
+#' identical(get_model_fit(x), m) # TRUE
+#' get_model_idx(x)
+#'
+#' @export
+get_model_fit <- function(x) {
+    if (!is_causal_mod(x)) {
+        cli_abort("{.arg x} must be a {.cls causal_mod}.", call=parent.frame())
+    }
+    attr(x, "model")
+}
+
+#' @rdname get_model_fit
+#' @export
+get_model_idx <- function(x) {
+    if (!is_causal_mod(x)) {
+        cli_abort("{.arg x} must be a {.cls causal_mod}.", call=parent.frame())
+    }
+    attr(x, "idx")
 }
 
 
@@ -108,3 +152,12 @@ vec_ptype2.causal_mod.double <- function(x, y, ...) double()
 #' @importFrom vctrs vec_cast
 #' @export
 vec_cast.double.causal_mod <- function(x, to, ...) vctrs::vec_data(x)
+
+
+# model generics -------------------------------------------------------------------
+
+#' @importFrom stats confint
+#' @export
+confint.causal_mod <- function(object, parm, level=0.95, ...) {
+    NextMethod(object=get_model_fit(object))
+}

@@ -29,18 +29,28 @@ fitted values, with \code{NA}s determined by \code{\link[=na.action]{na.action()
 model object in \code{causal_mod()}.}
 }
 \value{
-A \code{causal_mod} object. For \code{is_causal_mod()}, a logical value.
+\itemize{
+\item For \code{causal_mod()} and \code{new_causal_mod()}: A \code{causal_mod} object.
+\item For \code{is_causal_mod()}, a logical value.
+}
 }
 \description{
 The \code{causal_mod} class acts like a vector of fitted values, but it also
 stores the fitted model for later predictions and summaries, and keeps track
 of observations that have been dropped (e.g. due to missingness) or subsetted.
 }
+\details{
+A \code{causal_mod} object can be treated and will behave as a numeric vector of
+fitted values. The original model object is stored in the \code{"model"}
+attribute, which can be accessed with \code{\link[=get_model_fit]{get_model_fit()}}. The \code{idx} indices
+(which may have been computed automatically) are stored in the \code{"idx"}
+attribute, which can be accessed with \code{\link[=get_model_idx]{get_model_idx()}}.
+}
 \section{Functions}{
 \itemize{
 \item \code{new_causal_mod()}: Construct a \code{causal_mod} with minimal checks
 
-\item \code{is_causal_mod()}: Return \code{TRUE} if an object is an \code{causal_mod} list
+\item \code{is_causal_mod()}: Return \code{TRUE} if an object is a \code{causal_mod}
 
 }}
 \examples{
@@ -52,5 +62,6 @@ m_mis <- lm(yield ~ block + N*P*K, data=d)
 fitted(m_mis) # length doesn't match rows of `d`
 causal_mod(m_mis) # NA for missing value
 attr(causal_mod(m_mis), "idx")
+attr(causal_mod(m_mis), "mod")
 
 }
