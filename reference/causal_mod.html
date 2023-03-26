@@ -115,11 +115,20 @@ model object in <code>causal_mod()</code>.</p></dd>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">d</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="va">npk</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">m_mis</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">yield</span> <span class="op">~</span> <span class="va">block</span> <span class="op">+</span> <span class="va">N</span><span class="op">*</span><span class="va">P</span><span class="op">*</span><span class="va">K</span>, data<span class="op">=</span><span class="va">d</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/fitted.values.html" class="external-link">fitted</a></span><span class="op">(</span><span class="va">m_mis</span><span class="op">)</span> <span class="co"># length doesn't match rows of `d`</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        2        3        4        5        6        7        8        9 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 50.89167 58.32500 51.82500 55.05833 65.10000 55.70000 53.33333 55.66667 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       10       11       12       13       14       15       16       17 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 58.99167 59.02500 68.42500 56.65833 57.77500 48.37500 46.00833 48.34167 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       18       19       20       21       22       23       24       25 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 54.82500 48.32500 51.55833 47.39167 57.38333 60.65000 53.21667 54.15000 </span>
 <span class="r-in"><span><span class="fu">causal_mod</span><span class="op">(</span><span class="va">m_mis</span><span class="op">)</span> <span class="co"># NA for missing value</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;causal_mod[25]&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] NA    50.89 58.33 51.83 55.06 65.1  55.7  53.33 55.67 58.99 59.02 68.42</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [13] 56.66 57.77 48.38 46.01 48.34 54.82 48.32 51.56 47.39 57.38 60.65 53.22</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [25] 54.15</span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="fu">causal_mod</span><span class="op">(</span><span class="va">m_mis</span><span class="op">)</span>, <span class="st">"idx"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] NA  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
