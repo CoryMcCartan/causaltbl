@@ -12,6 +12,7 @@ reference:
   desc: '`vctrs`-friendly types that are useful for causal inference'
   contents:
   - causal_idx
+  - causal_mod
 - title: 'Extend `causal_tbl`'
   desc: Developer-facing functions
   contents:
