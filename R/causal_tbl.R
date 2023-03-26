@@ -125,6 +125,7 @@ reconstruct.causal_tbl <- function(data, old) {
 #' is_causal_tbl(data)
 #' print(data)
 #'
+#' @order 1
 #' @export
 causal_tbl <- function(..., .outcome=NULL, .treatment=NULL) {
     data = vctrs::df_list(...)

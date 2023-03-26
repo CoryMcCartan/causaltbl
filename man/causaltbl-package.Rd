@@ -6,12 +6,15 @@
 \alias{causaltbl-package}
 \title{causaltbl: Tidy Causal Data Frames and Tools}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 Provides a 'causal_tbl' class for causal inference. A 'causal_tbl' keeps track of information on the roles of variables like treatment and outcome, and provides functionality to store models and their fitted values as columns in a data frame.
 }
 \seealso{
 Useful links:
 \itemize{
   \item \url{https://github.com/CoryMcCartan/causaltbl}
+  \item \url{http://corymccartan.com/causaltbl/}
   \item Report bugs at \url{https://github.com/CoryMcCartan/causaltbl/issues}
 }
 

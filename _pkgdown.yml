@@ -1,4 +1,19 @@
 url: http://corymccartan.com/causaltbl/
 template:
   bootstrap: 5
+reference:
+- title: Causal data frames
+  contents:
+  - causal_tbl
+  - set_treatment
+  - set_outcome
+  - set_panel
+- title: Special types
+  desc: '`vctrs`-friendly types that are useful for causal inference'
+  contents:
+  - causal_idx
+- title: 'Extend `causal_tbl`'
+  desc: Developer-facing functions
+  contents:
+  - causal_cols
 

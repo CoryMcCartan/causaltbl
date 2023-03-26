@@ -30,6 +30,8 @@ new_causal_idx <- function(x = list()) {
 #' print(idx)
 #' idx[1:2] # subsetting
 #' idx[c(2, 1, 3)] # reordering
+#'
+#' @order 1
 #' @export
 causal_idx <- function(x = list()) {
     # convert each element to an integer
