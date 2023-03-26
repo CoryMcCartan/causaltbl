@@ -49,7 +49,7 @@ causal_mod <- function(x, idx = NULL) {
         cli_abort("{.arg x} does not have a {.fn fitted} method.")
     }
     if (is.null(idx)) {
-        nas <- na.action(x)
+        nas <- stats::na.action(x)
         if (is.null(nas)) {
             idx = seq_along(fitted)
         } else {
