@@ -21,6 +21,9 @@ test_that("getting and setting treatment works", {
     expect_error(set_treatment(x, not_a_column), "doesn't exist")
     expect_error(set_treatment(x, c(milk_first, guess)), "Only one")
     expect_error(set_treatment(x, NULL), "Must select")
+
+    expect_vector(pull_treatment(x_trt), ptype = double(), size = 8)
+    expect_error(pull_treatment(x), "No treatment")
 })
 
 test_that("getting and setting outcome works", {
@@ -45,6 +48,9 @@ test_that("getting and setting outcome works", {
     expect_error(set_outcome(x, NULL), "Must select")
     x$guess = as.character(x$guess)
     expect_error(set_outcome(x, "guess"), "convert `guess`")
+
+    expect_vector(pull_outcome(x_out), ptype = double(), size = 8)
+    expect_error(pull_outcome(x), "No outcome")
 })
 
 
@@ -70,6 +76,11 @@ test_that("getting and setting panel data", {
     expect_error(set_panel(x, time=year), "for `unit`")
     expect_error(set_panel(x, unit=year, time=id), "convert `id`")
     expect_error(set_panel(x, unit=id, time=not_a_column), "doesn't exist")
+
+    expect_vector(pull_panel_unit(x_panel), ptype = character(), size = 8)
+    expect_error(pull_panel_unit(x), "No panel")
+    expect_vector(pull_panel_time(x_panel), ptype = integer(), size = 8)
+    expect_error(pull_panel_time(x), "No panel")
 })
 
 test_that("lower-level getting and setting", {

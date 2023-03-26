@@ -4,6 +4,7 @@
 \alias{set_treatment}
 \alias{get_treatment}
 \alias{has_treatment}
+\alias{pull_treatment}
 \title{Define a treatment variable for a \code{causal_tbl}}
 \usage{
 set_treatment(data, treatment, outcome = get_outcome())
@@ -11,6 +12,8 @@ set_treatment(data, treatment, outcome = get_outcome())
 get_treatment(data)
 
 has_treatment(data)
+
+pull_treatment(data)
 }
 \arguments{
 \item{data}{a data frame or \code{causal_tbl}}
@@ -29,6 +32,8 @@ If an outcome variable has been set, the output \code{name()} will be the
 outcome column.
 
 For \code{has_treatment()}, \code{TRUE} if there is a treatment variable set
+
+For \code{pull_treatment()} the vector of the treatment variable.
 }
 \description{
 Define a treatment variable for a \code{causal_tbl}

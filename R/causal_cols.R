@@ -115,6 +115,15 @@ get_outcome <- function(data) {
 has_outcome <- function(data) {
     !is.null(causal_cols(data)$outcomes)
 }
+#' @rdname set_outcome
+#' @return For `pull_outcome()` the vector of the outcome variable.
+#' @export
+pull_outcome <- function(data) {
+    if (!has_outcome(data)) {
+        cli::cli_abort("No outcome is set in {.arg data}.")
+    }
+    data[[get_outcome(data)]]
+}
 
 
 
@@ -164,6 +173,15 @@ get_treatment <- function(data) {
 has_treatment <- function(data) {
     !is.null(causal_cols(data)$treatments)
 }
+#' @rdname set_treatment
+#' @return For `pull_treatment()` the vector of the treatment variable.
+#' @export
+pull_treatment <- function(data) {
+    if (!has_treatment(data)) {
+        cli::cli_abort("No treatment is set in {.arg data}.")
+    }
+    data[[get_treatment(data)]]
+}
 
 
 
@@ -211,6 +229,23 @@ get_panel <- function(data) {
 has_panel <- function(data) {
     !is.null(causal_cols(data)$panel_unit) &&
         !is.null(causal_cols(data)$panel_time)
+}
+#' @rdname set_panel
+#' @return For `pull_panel_unit()` and `pull_panel_time()` the vector of the panel variable.
+#' @export
+pull_panel_unit <- function(data) {
+    if (!has_panel(data)) {
+        cli::cli_abort("No panel is set in {.arg data}.")
+    }
+    data[[get_panel(data)$unit]]
+}
+#' @rdname set_panel
+#' @export
+pull_panel_time <- function(data) {
+    if (!has_panel(data)) {
+        cli::cli_abort("No panel is set in {.arg data}.")
+    }
+    data[[get_panel(data)$time]]
 }
 
 

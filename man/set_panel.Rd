@@ -4,6 +4,8 @@
 \alias{set_panel}
 \alias{get_panel}
 \alias{has_panel}
+\alias{pull_panel_unit}
+\alias{pull_panel_time}
 \title{Define a panel data structure for a \code{causal_tbl}}
 \usage{
 set_panel(data, unit, time)
@@ -11,6 +13,10 @@ set_panel(data, unit, time)
 get_panel(data)
 
 has_panel(data)
+
+pull_panel_unit(data)
+
+pull_panel_time(data)
 }
 \arguments{
 \item{data}{a data frame or \code{causal_tbl}}
@@ -25,6 +31,8 @@ A \code{causal_tbl}
 For \code{get_panel()} a list with the column names of the unit and time variables
 
 For \code{has_panel()}, \code{TRUE} if there is panel data structure
+
+For \code{pull_panel_unit()} and \code{pull_panel_time()} the vector of the panel variable.
 }
 \description{
 Define a panel data structure for a \code{causal_tbl}
