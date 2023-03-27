@@ -3,7 +3,7 @@
 \name{causal_cols}
 \alias{causal_cols}
 \alias{causal_cols<-}
-\alias{set_causal_col}
+\alias{set_causal_cols}
 \alias{add_causal_col}
 \alias{get_causal_col}
 \title{Work directly with \code{causal_cols}}
@@ -12,7 +12,7 @@ causal_cols(data)
 
 causal_cols(data) <- value
 
-set_causal_col(data, what, ...)
+set_causal_cols(data, ...)
 
 add_causal_col(data, what, ..., ptype = NULL)
 
@@ -23,9 +23,9 @@ get_causal_col(data, what)
 
 \item{value}{New value for \code{causal_cols}.}
 
-\item{what}{The causal column to get or set.}
-
 \item{...}{Named attributes to add to \code{data}'s causal attributes.}
+
+\item{what}{The causal column to get or add.}
 
 \item{ptype}{A type to coerce a single added column to.}
 }
@@ -40,7 +40,7 @@ functionality.
 \itemize{
 \item \code{causal_cols(data) <- value}: Set \code{causal_cols}
 
-\item \code{set_causal_col()}: Set column(s) for a \code{causal_col}
+\item \code{set_causal_cols()}: Set column(s) for a \code{causal_col}
 
 \item \code{add_causal_col()}: Add a single column to a \code{causal_col}
 
@@ -52,8 +52,9 @@ data <- data.frame(
   milk_first = c(0, 1, 0, 1, 1, 0, 0, 1),
   guess = c(0, 1, 0, 1, 1, 0, 0, 1)
 ) |>
-  set_causal_col("treatment", guess=milk_first)
+  set_causal_cols(outcomes=guess, treatments=c(guess=milk_first))
 print(data)
-get_causal_col(data, "treatment")
+get_causal_col(data, "treatments")
+get_causal_col(data, "outcomes")
 causal_cols(data)
 }

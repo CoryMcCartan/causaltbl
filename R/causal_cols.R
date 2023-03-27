@@ -6,7 +6,7 @@
 #' @param data A [causal_tbl].
 #' @param value New value for `causal_cols`.
 #' @param ... Named attributes to add to `data`'s causal attributes.
-#' @param what The causal column to get or set.
+#' @param what The causal column to get or add.
 #' @param ptype A type to coerce a single added column to.
 #'
 #' @returns Varies. Setter methods return the original `data`, perhaps invisibly.
@@ -16,9 +16,10 @@
 #'   milk_first = c(0, 1, 0, 1, 1, 0, 0, 1),
 #'   guess = c(0, 1, 0, 1, 1, 0, 0, 1)
 #' ) |>
-#'   set_causal_col("treatment", guess=milk_first)
+#'   set_causal_cols(outcomes=guess, treatments=c(guess=milk_first))
 #' print(data)
-#' get_causal_col(data, "treatment")
+#' get_causal_col(data, "treatments")
+#' get_causal_col(data, "outcomes")
 #' causal_cols(data)
 #' @export
 causal_cols <- function(data) {
@@ -33,11 +34,14 @@ causal_cols <- function(data) {
 
 #' @describeIn causal_cols Set column(s) for a `causal_col`
 #' @export
-set_causal_col <- function(data, what, ...) {
+set_causal_cols <- function(data, ...) {
     data <- as_causal_tbl(data)
-    dots <- rlang::quo(c(...))
-    cols <- multi_col_name(dots, data, what)
-    causal_cols(data)[[what]] <- cols
+    dots <- rlang::enquos(...)
+    for (i in seq_along(dots)) {
+        what <- names(dots)[i]
+        cols <- multi_col_name(dots[[i]], data, what)
+        causal_cols(data)[[what]] <- cols
+    }
     data
 }
 #' @describeIn causal_cols Add a single column to a `causal_col`
@@ -47,7 +51,7 @@ add_causal_col <- function(data, what, ..., ptype=NULL) {
     dots <- enquos(...)
     if (length(dots) > 1) {
         cli_abort(c("Only one column can be added at a time.",
-                    ">"="Use {.fn set_causal_col} to add more than one column."),
+                    ">"="Use {.fn set_causal_cols} to add more than one column."),
                   call=parent.frame())
     }
 

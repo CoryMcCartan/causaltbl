@@ -84,10 +84,16 @@ test_that("causal_tbl slicing and renaming", {
     x_df = as.data.frame(x)
     expect_equal(x[1:2, ], causal_tbl(x_df[1:2, ], .outcome=y, .treatment=trt))
 
+    expect_identical(x, x[])
+
+    y <- x[1:4, ]
+    expect_equal(get_treatment(y), c(y="trt"))
+    expect_equal(get_outcome(y), "y")
+
     y <- x[2]
     expect_null(get_treatment(y))
     expect_equal(get_outcome(y), "y")
-    y <- x[1]
+    y <- x[, 1]
     expect_null(get_outcome(y))
     expect_equal(get_treatment(y), "trt") # no y= !
 
