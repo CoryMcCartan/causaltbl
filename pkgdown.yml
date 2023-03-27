@@ -3,7 +3,7 @@ pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   advanced: advanced.html
-last_built: 2023-03-26T19:20Z
+last_built: 2023-03-27T01:35Z
 urls:
   reference: http://corymccartan.com/causaltbl/reference
   article: http://corymccartan.com/causaltbl/articles
