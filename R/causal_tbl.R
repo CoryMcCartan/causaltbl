@@ -176,7 +176,7 @@ assert_df <- function(data, arg) {
 # Slicing and renaming handlers --------------------------------------------
 
 #' @export
-`[.causal_tbl` <- function(x, i) {
+`[.causal_tbl` <- function(x, i, j, ..., drop = TRUE) {
     new_names <- names(x)[i]
     out <- NextMethod()
 
