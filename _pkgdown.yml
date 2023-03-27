@@ -13,6 +13,7 @@ reference:
   contents:
   - causal_idx
   - causal_mod
+  - get_model_fit
 - title: 'Extend `causal_tbl`'
   desc: Developer-facing functions
   contents:
