@@ -177,7 +177,13 @@ assert_df <- function(data, arg) {
 
 #' @export
 `[.causal_tbl` <- function(x, i, j, ..., drop = TRUE) {
-    new_names <- names(x)[i]
+    if (nargs() == 2) { # i indexes columns
+        if (missing(i)) return(NextMethod())
+        new_names <- names(x)[i]
+    } else { # j indexes columns
+        if (missing(j)) return(NextMethod())
+        new_names <- names(x)[j]
+    }
     out <- NextMethod()
 
     cols <- causal_cols(x)
