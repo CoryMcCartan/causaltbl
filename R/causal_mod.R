@@ -159,6 +159,30 @@ vec_ptype2.causal_mod.double <- function(x, y, ...) double()
 vec_cast.double.causal_mod <- function(x, to, ...) vctrs::vec_data(x)
 
 
+#' @importFrom vctrs vec_arith
+#' @method vec_arith causal_mod
+#' @export
+vec_arith.causal_mod <- function(op, x, y, ...) {
+    UseMethod("vec_arith.causal_mod", y)
+}
+#' @method vec_arith.causal_mod default
+#' @export
+vec_arith.causal_mod.default <- function(op, x, y, ...) {
+    vctrs::vec_arith_base(op, x, vctrs::vec_data(y), ...)
+}
+#' @method vec_arith.causal_mod causal_mod
+#' @export
+vec_arith.causal_mod.causal_mod <- function(op, x, y, ...) {
+    vctrs::vec_arith_base(op, vctrs::vec_data(x), vctrs::vec_data(y), ...)
+}
+#' @importFrom vctrs vec_arith.numeric
+#' @method vec_arith.numeric causal_mod
+#' @export
+vec_arith.numeric.causal_mod <- function(op, x, y, ...) {
+    vctrs::vec_arith_base(op, vctrs::vec_data(x), y, ...)
+}
+
+
 # model generics -------------------------------------------------------------------
 
 #' @importFrom stats fitted

@@ -5,6 +5,7 @@ test_that("causal_mod constructor", {
     expect_s3_class(x, "causal_mod")
     expect_type(x, "double")
     expect_true(is_causal_mod(x))
+    expect_equal(length(x), nrow(npk))
 
     expect_error(causal_mod(5), "atomic")
     expect_error(new_causal_mod(5), "atomic")
@@ -45,7 +46,6 @@ test_that("causal_mod slicing", {
     expect_equal(attr(x[4:2], "idx"), 4:2)
 })
 
-
 test_that("causal_mod generics", {
     m <- lm(yield ~ block + N, data=npk)
     x <- causal_mod(m)
@@ -62,6 +62,14 @@ test_that("causal_mod generics", {
     expect_identical(formula(x), formula(m))
 })
 
+test_that("causal_mod arithmetic", {
+    m <- lm(yield ~ block + N, data=npk)
+    x <- causal_mod(m)
+
+    expect_equal(x - x, rep(0, nrow(npk)))
+    expect_equal(x + 1, unname(fitted(m)) + 1)
+    expect_equal(1 + x, unname(fitted(m)) + 1)
+})
 
 test_that("causal_mod printing", {
     skip_on_cran()
